@@ -1,13 +1,13 @@
 The Kevoree Modeling Framework Tutorial: STEP 0 Hello World
 ==============================================
 
-This initial step in the KMF tutorial will help you to define an initial metaodel, generate the associated code and manipulate the asynchronous API to fill and traverse some data.
+This initial step in the KMF tutorial will help you to define an initial meta model, generate the associated code, and use the asynchronous API to create and traverse objects.
 
 Project setup:
 -------------
 
-KMF is classically using a maven project declaration.
-The two important sections that should keep your attention in the pom.xml file is the declaration of the Kevoree Compilation Plugin:
+KMF uses a maven project declaration.
+The two important sections that should attract your attention in the pom.xml file is the declaration of the Kevoree compiler plugin:
 
 ```xml
     <build>
@@ -33,14 +33,15 @@ The two important sections that should keep your attention in the pom.xml file i
     </build>
 ```
 
-This plugin defines that an input file **smartcity.mm** should be compiled into a Java at the build cycle of maven. In other words a simple 
+This plugin defines that an input meta model file, in this case **smartcity.mm**, is used to generate the corresponding Java code for creating, processing, traversing, and manipulating data. 
+A simple 
 
 ```sh
 mvn clean install
 ```
 
-will generate the corresponding API and allow you to use your first KMF based model.
-and in addition the pom.xml declare a dependancy to the KMF framework through:
+generates the corresponding Java code and allow you to use your first KMF-based model.
+In addition the pom.xml declares a dependency to the KMF framework:
 
 ```xml
     <dependencies>
@@ -73,28 +74,29 @@ class smartcity.Sensor {
 }
 ```
 
-Here we define a very simple metamodel, the **att** keyword defines the attributes of the class which can be only primitives types such as String, Long, Int, Bool, Double.
-References between metaclasses are declares through the ref and ref* keywords that respectively define a single and multiple references.
+Here we define a very simple meta model with a custom DSL, the **att** keyword defines the attributes of the class which can be only primitives types such as String, Long, Int, Bool, and Double.
+References between meta classes are declared through the **ref** and **ref*** keywords that define a to-one respectively too-many references.
 
 
-Initial usage of the API:
+Simple usage of the API:
 ------------------------
 
-The first to do in a Java program is the creation of a model instance that can be performed through the following line with default options (details of options will be covered in next steps).
+The first thing to do in a Java program is the creation of a model instance, which can be done through the following code with default options (details of options will be covered in the next steps).
 
 ```java
 final SmartCityModel model = new SmartcityModel(DataManagerBuilder.buildDefault());
 ```
 
-Then a model should be connected throught a connect method and a callback should be given to continue once this is done.
+Then, a model must be connected via the **connect** method and a callback must be used to continue once the model is connected.
 
-Then to manipulate a model easily we create a view. A view is associate to a point in time and a universe (details of time and universe will be covered later, here its time 0 and universe 0)
+To manipulate a model we create a view. 
+A view is associate to a time point and a universe (details of time and universe will be covered later in this tutorial, here we use time 0 and universe 0)
 
 ```java
 SmartCityView baseView = model.universe(BASE_UNIVERSE).time(BASE_TIME);
 ```
 
-From this view, man can now create some objects, set some values and their results in JSON format.
+From this view, one can now create objects, set values and references, and print the content of objects in JSON format.
 
 ```java
 //create one smartCity
@@ -107,21 +109,21 @@ District newDistrict_1 = baseView.createDistrict();
 newDistrict_1.setName("District_1");
 ```
 
-Objects can also be create outside of the view by giving directly the time and universe value (in double)
+Objects can also be created outside of a view giving directly the time and universe (double values)
 
 ```java
 District newDistrict_2 = model.createDistrict(BASE_UNIVERSE, BASE_TIME);
 newDistrict_2.setName("District_1");
 ```
 
-To add an object in a relationship, man can use add<refName> methods such as:
+To add an object in a relationship, one can use the **add<refName>** methods:
 
 ```java
 city.addDistricts(newDistrict_1);
 city.addDistricts(newDistrict_2);
 ```
 
-The City object and associated objects can be saved as JSON using the following line:
+The City object and its associated objects can be saved as JSON using the following line:
 
 ```java
 baseView.json().save(city, new KCallback<String>() {
