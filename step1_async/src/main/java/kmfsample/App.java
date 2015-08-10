@@ -21,47 +21,26 @@ public class App {
 
                 SmartcityView baseView = model.universe(BASE_UNIVERSE).time(BASE_TIME);
 
-                //create one smartCity
                 City city = baseView.createCity();
                 city.setName("MySmartCity");
-
-                //Print the single object: city
-                System.out.println("NewCreatedCity==>" + city.toJSON());
-
-                //Add two empty district
                 District newDistrict_1 = baseView.createDistrict();
                 newDistrict_1.setName("District_1");
-
-                //We can as well create arbitrary object without the view
                 District newDistrict_2 = model.createDistrict(BASE_UNIVERSE, BASE_TIME);
                 newDistrict_2.setName("District_1");
-
                 city.addDistricts(newDistrict_1);
                 city.addDistricts(newDistrict_2);
-
-                //Print the modified City
-                System.out.println("ModifiedCity==>" + city.toJSON());
-
-                //Add a sensor
                 Sensor sensor = model.createSensor(BASE_UNIVERSE, 0);
                 sensor.setName("FakeTempSensor_0");
                 sensor.setValue(0.5);
-                //Add the sensor to district 2
                 newDistrict_2.addSensors(sensor);
-
-                //Here we save
-                baseView.json().save(city, new KCallback<String>() {
-                    @Override
-                    public void on(String savedFullView) {
-                        System.out.println("FullModel:" + savedFullView);
-                    }
-                });
-
-                //Now identified the Root
                 baseView.setRoot(city, new KCallback<Throwable>() {
                     @Override
                     public void on(Throwable throwable) {
 
+                        
+
+
+                        /*
                         //Now traverse the Root
                         baseView.getRoot(new KCallback<KObject>() {
                             @Override
@@ -93,12 +72,12 @@ public class App {
 
 
                             }
-                        });
+                        });*/
 
                     }
                 });
 
-                //end of STEP_0
+                //end of STEP_1
 
             }
         });
