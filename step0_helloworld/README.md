@@ -3,7 +3,7 @@ The Kevoree Modeling Framework Tutorial: STEP 0 Hello World
 
 This initial step in the KMF tutorial will help you to define an initial meta model, generate the associated code, and use the asynchronous API to create and traverse objects.
 
-Project setup:
+Project Setup:
 -------------
 
 KMF uses a maven project declaration.
@@ -78,7 +78,7 @@ Here we define a very simple meta model with a custom DSL, the **att** keyword d
 References between meta classes are declared through the **ref** and **ref*** keywords that define a to-one respectively too-many references.
 
 
-Simple usage of the API:
+Simple API Usage:
 ------------------------
 
 The first thing to do in a Java program is the creation of a model instance, which can be done through the following code with default options (details of options will be covered in the next steps).
@@ -134,17 +134,18 @@ baseView.json().save(city, new KCallback<String>() {
 });
 ```
 
-Root index:
+Root Index:
 ----------
 
-The KMF can offer several index to retrieve objects and then navigate to siblings, the main one is called root.
-A root can be set through the KView as (here the city is set as the root of the model):
+KMF offers several indexes to retrieve objects and then to navigate to siblings.
+The main index is called root.
+A root can be set with a **KView** (as here the city is set as the root of the model):
 
 ```java
 baseView.setRoot(city, new KCallback<Throwable>() {
 ```
 
-Later to retrieve the root for a point in time and universe, man can do:
+Later, in order to retrieve the root for a point in time and universe, the **getRoot** method can be used: 
 
 ```java
 baseView.getRoot(new KCallback<KObject>() {
@@ -152,21 +153,21 @@ baseView.getRoot(new KCallback<KObject>() {
             ...
 ```
 
-The root is resolved and given in the callback result as any KMF Object (aka KObject).
+The root is resolved and given in the callback result as any KMF Object (KObject).
 
-First usage of traversal:
+Simple Traversal Usage:
 ------------------------
 
-A traversal can be create from any object in the model.
+A traversal can be created from any **KObject** in the model.
 For instance using:
 
 ```java
 resolvedRoot.traversal()
 ```
 
-From this traversal object, man can chain recursive navigation that will be executed in an optimal way at runtime.
+From this traversal object, one can chain recursive navigation objects that will be executed at runtime.
 
-Such as traversing all objects of the relationship DISTRICT from an object CITY
+For example, one could imagine to traverse all objects of the relationship DISTRICT from an object CITY
 
 ```java
 resolvedRoot.traversal().traverse(MetaCity.REF_DISTRICTS).then(new KCallback<KObject[]>() {
@@ -174,10 +175,11 @@ resolvedRoot.traversal().traverse(MetaCity.REF_DISTRICTS).then(new KCallback<KOb
     public void on(KObject[] kObjects) {
 ```
 
-As results, a traversal will give you an array of objects that are the results of the traverse operation, here all objects reachable from the city and through the relationship district.
-It also important to notice that all metaClass have a companion object that give a quick acess to RelationShip definition that can be used to configure traversal such as MetaCity.
+As results, a traversal will yield an array of objects that are the results of the traversal operation.
+In this case, all objects which are reachable from the city object through its district relationship.
+It is important to notice that all meta classes have a companion object that gives quick access to relationship definitions that can be used to configure the traversal, e.g. MetaCity.REF_DISTRICTS.
 
-Finally a traversal can also contains several traversal steps, such as traversal additional the all sensors.
+Finally, a traversal can consist of several steps, e.g. traverse first to the districts and from there to all sensors:
 
 ```java 
 resolvedRoot.traversal().traverse(MetaCity.REF_DISTRICTS).traverse(MetaDistrict.REF_SENSORS).then(new KCallback<KObject[]>() {
@@ -185,7 +187,7 @@ resolvedRoot.traversal().traverse(MetaCity.REF_DISTRICTS).traverse(MetaDistrict.
     public void on(KObject[] kObjects) {
 ```
 
-As results here all sensors reachable from all district them self reachable from the city will be given as result.
+In this example, all sensors which are reachable from the districts which themselves are reachable from the city, will be yielded as result.
 
 
 
