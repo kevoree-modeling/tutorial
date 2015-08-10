@@ -58,12 +58,12 @@ public class App {
                 });
 
                 //Now identified the Root
-                model.manager().setRoot(city, new KCallback<Throwable>() {
+                baseView.setRoot(city, new KCallback<Throwable>() {
                     @Override
                     public void on(Throwable throwable) {
 
                         //Now traverse the Root
-                        model.manager().getRoot(BASE_UNIVERSE, BASE_TIME, new KCallback<KObject>() {
+                        baseView.getRoot(new KCallback<KObject>() {
                             @Override
                             public void on(KObject resolvedRoot) {
                                 System.out.println("ResolvedRoot====> " + resolvedRoot);
