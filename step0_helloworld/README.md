@@ -123,7 +123,7 @@ city.addDistricts(newDistrict_1);
 city.addDistricts(newDistrict_2);
 ```
 
-The City object and its associated objects can be saved as JSON using the following line:
+The City object and its associated objects can be printed as a JSON string using the following line:
 
 ```java
 baseView.json().save(city, new KCallback<String>() {
