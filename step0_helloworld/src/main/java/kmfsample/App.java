@@ -19,7 +19,7 @@ public class App {
         model.connect(new KCallback() {
             public void on(Object o) {
 
-                SmartcityView baseView = model.universe(BASE_UNIVERSE).time(BASE_TIME);
+                SmartCityView baseView = model.universe(BASE_UNIVERSE).time(BASE_TIME);
 
                 //create one smartCity
                 City city = baseView.createCity();
@@ -97,6 +97,8 @@ public class App {
 
                     }
                 });
+
+                //end of STEP_0
 
             }
         });
