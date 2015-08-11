@@ -1,4 +1,4 @@
-The Kevoree Modeling Framework Tutorial: STEP 2 Persistence
+The KMF Tutorial: STEP 2 Persistence
 ==============================================
 
 This step of the KMF tutorial will guide you through how to persist your data.
@@ -72,11 +72,40 @@ Instead of callbacks, from Java 8 onwards, it is possible to use closures for th
         // do something
     });
 ```
-
+For the following examples we will show the closure version, however it is always possible to use the callback-style for older Java versions.
 KMF maintains the information about which objects have been actually modified and only updates/persists the necessary ones.
  
  
 Loading Data
 --------------
+KMF transparently manages loading of data while traversing or navigating the object graph. 
+Whenever a navigation is traversed, KMF loads (if necessary) the corresponding objects from the persistence storage. 
+Typically, navigating or traversing starts from a dedicated object, often the root object. 
+The root object can be retrieved like shown in the following code snippet:
 
- 
+```java
+    final SmartCityView lookupView = universe.time(0l);
+    model.manager().getRoot(lookupView.universe(), lookupView.now(), kObject -> {
+        // do something
+    });
+```              
+
+Since KMF doesn't just support simple persistence of objects but in addition the versioning of objects (on a per-object basis) and also provides a native notion of time and temporal data, before retrieving data it must be specified which version (or at which point in time) the objects should be retrieved. 
+This is done in the following line:
+```java
+    final SmartCityView lookupView = universe.time(0l);
+```
+This topic is covered in detail in the next step of the KMF tutorial.
+For now it is just important to have a **lookupView** from where we can load our data. 
+
+Another possibility, instead of using the model and its manager to get the root, is to use KMFs query API:
+```java
+    lookupView.select("@root", kObjects -> {
+        // do something
+    });
+```
+
+The same mechanisms can be used to query any object, not just the root.
+For this purpose, KMFs model query language, introduced in step 1 of this tutorial, can be used.  
+
+To sum up, loading of objects is managed transparently by KMF when querying and navigating the model.
