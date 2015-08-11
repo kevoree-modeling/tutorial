@@ -88,5 +88,64 @@ In case another strategy is needed, it can be replaced by a custom resolver impl
 
 The following code snipped shows how one can create and connect objects from different time points: 
 ```java
+SmartcityView baseView = model.universe(BASE_UNIVERSE).time(3);
+final City city = baseView.createCity();
+city.setName("smartcity");
+
+final SmartcityView t10View = model.universe(BASE_UNIVERSE).time(10);
+final District district_1 = t10View.createDistrict();
+district_1.setName("district_1");
+
+SmartcityView t15View = model.universe(BASE_UNIVERSE).time(15);
+t15View.lookup(city.uuid(), city_t15 -> {
+    t15View.lookup(district_1.uuid(), district_1_t15 -> {
+        city_t15.addDistricts(district_1_t15);
+    });
+});
+```
+In this listing we create a **City** object at t<sub>3</sub> and a **District** object at t<sub>10</sub>. 
+At time t<sub>15</sub> we connect the two objects.
+This means that at t<sub>2</sub> neither the **City** nor the **District** object exists. 
+At t<sub>7</sub> the **City** objects exists but not the **District** object. 
+At t<sub>12</sub> both objects, the **City** and the **District** object exist but not the relation between. 
+Finally, at t<sub>17</sub> the relation can be navigated. 
+These facts are summarized in the next code snipped.
+
+```java
+SmartcityView t2View = model.universe(BASE_UNIVERSE).time(2);
+t2View.lookup(city.uuid(), city_t2 -> {
+    Assert.assertNull(city_t2);
+});
+
+SmartcityView t7View = model.universe(BASE_UNIVERSE).time(7);
+t7View.lookup(city.uuid(), city_t7 -> {
+    Assert.assertNotNull(city_t7);
+});
+SmartcityView t7View = model.universe(BASE_UNIVERSE).time(7);
+t7View.lookup(city.uuid(), city_t7 -> {
+    Assert.assertNotNull(city_t7);
+    Assert.assertEquals(0, city_t7.getDistricts().size());    
+});
+t7View.lookup(district_1.uuid(), district_1_t7 -> {
+    Assert.assertNull(district_1_t7);
+});
+
+SmartcityView t12View = model.universe(BASE_UNIVERSE).time(12);
+t12View.lookup(city.uuid(), city_t12 -> {
+    Assert.assertNotNull(city_t12);
+});
+t12View.lookup(district_1.uuid(), district_1_t12 -> {
+    Assert.assertNotNull(district_1_t12);
+});
+
+SmartcityView t17View = model.universe(BASE_UNIVERSE).time(17);
+t17View.lookup(city.uuid(), city_t17 -> {
+    Assert.assertNotNull(city_t17);
+    Assert.assertEquals(1, city_t17.getDistricts().size());    
+});
+t17View.lookup(district_1.uuid(), district_1_t17 -> {
+    Assert.assertNotNull(district_1_t17);
+});
 
 ```
+
