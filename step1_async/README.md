@@ -102,3 +102,27 @@ baseView.select("@root | districts[*] | sensors[] | =(3.5+value*8-14/7)%4 ", ex
 KDefer API:
 -----------
 
+To avoid the callback hell well know problem, KMF offer a collector object named KDefer.
+KDefer is a mix of Deferrable and Promise construction classically founded in asynchronous and reactive programing.
+A KDefer object can be created from the model using the following line:
+
+
+```java
+KDefer defer = model.defer();
+```
+
+Then this object can be use to generate callback that can be used for method which gave results asynchronously such as lookup of select:
+
+```java
+baseView.select("@root | districts[*] | sensors[] | =value ", defer.waitResult());
+baseView.select("@root | districts[*] | sensors[] | =(3.5+value*8-14/7)%4 ", defer.waitResult());
+```
+
+Finally, once everything is configure, the KDefer can receive its final callback, triggered only when all results will be collected:
+
+```java
+defer.then(resultSets -> { });
+```
+
+The resultSet object is an array of objects, which has exactly the same size than the number of callback created (also ordered in the same way).
+If results are also object array such as the case of selector methods, then the resultSets is an array of array.
