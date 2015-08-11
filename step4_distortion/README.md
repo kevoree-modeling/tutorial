@@ -75,4 +75,18 @@ u1View.lookup(city.uuid(), kObject -> {
 
 Time and Universe Distortion: KMFs Data Resolution Strategy
 ------------------------------------------------------------
+KMF allows every object to evolve independently. 
+This means it is not necessary to snapshot or discretize the whole model when an object changes.
+This saves both storage capacity and performance.
+However, this means that an **object o**, which exists from a time point t<sub>3</sub> onwards can be connected (through a relationship) to another **object p** which exists in several different versions at several different time points.
+When the object graph is now navigated from **object o** to **object p** KMF is responsible to resolve the "correct" version of **object p**.
+First, the "correct" version of **object p** must be in the same universe in which **object o** was resolved. 
+Then, the version of **object p** which is valid at the time point of the navigation (this is the time point at which **object o** was resovled) is returned. 
+As a rule of thumb it can be thought of that always the last valid version of **object o** relative to the navigation time point is resolved.  
+This resolution strategy may sound complicated but is transparently implemented in KMFs **DistortedTimeResolver** strategy. 
+In case another strategy is needed, it can be replaced by a custom resolver implementing the **KResolver** interface, otherwise the resolution works natural as one would expect when working with temporal data (and different universes).
 
+The following code snipped shows how one can create and connect objects from different time points: 
+```java
+
+```
