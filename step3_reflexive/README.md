@@ -8,6 +8,9 @@ This step of the KMF tutorial will guide you through the reflexive manipulation 
 This tutorial demonstrate the ability to use KMF without code generation phase, which can make it more handy for dynamic environment.
 This usage has nearly no impact on performance, reflexive are only more difficult to maintain in software due to plain name in string.
 
+Its important to notice here the change in the POM.xml file, there is no .mm file defined, and no KMF compiler plugin activated.
+Here this project use plain Java with only one dependency to the KMF framework.
+
 MetaModel reflexive creation:
 ----------------------------
 
