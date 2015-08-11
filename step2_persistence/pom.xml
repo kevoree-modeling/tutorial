@@ -19,6 +19,11 @@
             <artifactId>org.kevoree.modeling.microframework</artifactId>
             <version>${kmf.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.kevoree.modeling</groupId>
+            <artifactId>org.kevoree.modeling.microframework.drivers.leveldb</artifactId>
+            <version>${kmf.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

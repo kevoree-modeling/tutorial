@@ -1,4 +1,4 @@
-The KMF Tutorial: STEP 2 Persistence
+The KMF Tutorial: Step 2 Persistence
 ==============================================
 
 This step of the KMF tutorial will guide you through how to persist your data.
@@ -95,7 +95,7 @@ This is done in the following line:
 ```java
     final SmartCityView lookupView = universe.time(0l);
 ```
-This topic is covered in detail in the next step of the KMF tutorial.
+This topic is covered in detail in step 4 of the KMF tutorial.
 For now it is just important to have a **lookupView** from where we can load our data. 
 
 Another possibility, instead of using the model and its manager to get the root, is to use KMFs query API:

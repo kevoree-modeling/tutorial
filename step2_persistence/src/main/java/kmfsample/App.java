@@ -1,11 +1,15 @@
 package kmfsample;
 
+import com.sun.tools.javac.util.Assert;
 import org.kevoree.modeling.KCallback;
 import org.kevoree.modeling.KObject;
+import org.kevoree.modeling.cdn.KContentDeliveryDriver;
+import org.kevoree.modeling.drivers.leveldb.LevelDbContentDeliveryDriver;
 import org.kevoree.modeling.memory.manager.DataManagerBuilder;
+import org.kevoree.modeling.memory.manager.internal.KInternalDataManager;
 import smartcity.*;
-import smartcity.meta.MetaCity;
-import smartcity.meta.MetaDistrict;
+
+import java.io.IOException;
 
 public class App {
 
@@ -15,71 +19,49 @@ public class App {
 
     public static void main(String[] args) {
 
-        final SmartcityModel model = new SmartcityModel(DataManagerBuilder.buildDefault());
-        model.connect(new KCallback() {
-            public void on(Object o) {
+        final String databasePath = "kmf/database";
+        KInternalDataManager dm = null;
+        KContentDeliveryDriver cdn = null;
+        try {
+            dm = DataManagerBuilder.create().withContentDeliveryDriver(new LevelDbContentDeliveryDriver(databasePath)).build();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        final SmartcityModel model = new SmartcityModel(dm);
 
-                SmartcityView baseView = model.universe(BASE_UNIVERSE).time(BASE_TIME);
+        model.connect(o -> {
 
-                City city = baseView.createCity();
-                city.setName("MySmartCity");
-                District newDistrict_1 = baseView.createDistrict();
-                newDistrict_1.setName("District_1");
-                District newDistrict_2 = model.createDistrict(BASE_UNIVERSE, BASE_TIME);
-                newDistrict_2.setName("District_1");
-                city.addDistricts(newDistrict_1);
-                city.addDistricts(newDistrict_2);
-                Sensor sensor = model.createSensor(BASE_UNIVERSE, 0);
-                sensor.setName("FakeTempSensor_0");
-                sensor.setValue(0.5);
-                newDistrict_2.addSensors(sensor);
-                baseView.setRoot(city, new KCallback<Throwable>() {
-                    @Override
-                    public void on(Throwable throwable) {
+            SmartcityView baseView = model.universe(BASE_UNIVERSE).time(BASE_TIME);
 
-                        
+            City city = baseView.createCity();
+            city.setName("MySmartCity");
+            District newDistrict_1 = baseView.createDistrict();
+            newDistrict_1.setName("District_1");
+            District newDistrict_2 = model.createDistrict(BASE_UNIVERSE, BASE_TIME);
+            newDistrict_2.setName("District_1");
+            city.addDistricts(newDistrict_1);
+            city.addDistricts(newDistrict_2);
+            Sensor sensor = model.createSensor(BASE_UNIVERSE, 0);
+            sensor.setName("FakeTempSensor_0");
+            sensor.setValue(0.5);
+            newDistrict_2.addSensors(sensor);
 
+            baseView.setRoot(city, throwable1 -> {
 
-                        /*
-                        //Now traverse the Root
-                        baseView.getRoot(new KCallback<KObject>() {
-                            @Override
-                            public void on(KObject resolvedRoot) {
-                                System.out.println("ResolvedRoot====> " + resolvedRoot);
+                model.save(throwable2 -> {
 
-                                //Example of traversal
-                                resolvedRoot.traversal().traverse(MetaCity.REF_DISTRICTS).then(new KCallback<KObject[]>() {
-                                    @Override
-                                    public void on(KObject[] kObjects) {
+                    baseView.json().save(city, json -> {
+                        System.out.println(json);
+                    });
 
-                                        System.out.println("Districts extracted:");
-                                        System.out.println(kObjects.length);
-                                        System.out.println(kObjects[0]);
-                                        System.out.println(kObjects[1]);
-                                    }
-                                });
-
-                                //Example of deep traversal
-                                resolvedRoot.traversal().traverse(MetaCity.REF_DISTRICTS).traverse(MetaDistrict.REF_SENSORS).then(new KCallback<KObject[]>() {
-                                    @Override
-                                    public void on(KObject[] kObjects) {
-
-                                        System.out.println("Sensor extracted:");
-                                        System.out.println(kObjects.length);
-                                        System.out.println(kObjects[0]);
-                                    }
-                                });
-
-
-                            }
-                        });*/
-
-                    }
+                    baseView.lookup(newDistrict_1.uuid(), kObject -> {
+                        System.out.println(kObject);
+                        System.out.println(kObject.uuid() == newDistrict_1.uuid());
+                    });
                 });
 
-                //end of STEP_1
+            });
 
-            }
         });
 
     }
