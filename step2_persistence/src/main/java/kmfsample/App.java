@@ -34,6 +34,10 @@ public class App {
             city.setName("MySmartCity");
             District newDistrict_1 = baseView.createDistrict();
             newDistrict_1.setName("District_1");
+            Contact contatDistrict1 = baseView.createContact();
+            contatDistrict1.setName("Mr district 1");
+            contatDistrict1.setEmail("contact@district1.smartcity");
+            newDistrict_1.setContact(contatDistrict1);
             District newDistrict_2 = model.createDistrict(BASE_UNIVERSE, BASE_TIME);
             newDistrict_2.setName("District_1");
             city.addDistricts(newDistrict_1);

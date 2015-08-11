@@ -5,6 +5,7 @@ class smartcity.City {
 
 class smartcity.District {
     att name: String
+    ref contact: smartcity.Contact
     ref* sensors: smartcity.Sensor
 }
 
