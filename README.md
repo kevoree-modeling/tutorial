@@ -21,4 +21,4 @@ Step 8: Isomorphic JS API
 
 Step 9: Template engine and Graph visualisation 
 
-Step 10: KInfer and advanced machine learning exemple
+Step 10: KInfer and advanced machine learning example

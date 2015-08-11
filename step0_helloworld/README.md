@@ -1,7 +1,7 @@
 The Kevoree Modeling Framework Tutorial: STEP 0 Hello World
 ==============================================
 
-This initial step in the KMF tutorial will help you to define an initial meta model, generate the associated code, and use the asynchronous API to create and traverse objects.
+This initial step of the KMF tutorial will help you to define an initial meta model, generate the associated code, and use the asynchronous API to create and traverse objects.
 
 Project Setup:
 -------------
