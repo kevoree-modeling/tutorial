@@ -19,11 +19,13 @@ public class App {
 
         KMetaModel metaModel = new MetaModel("SmartCityMetaModel");
         KMetaClass metaClassCity = metaModel.addMetaClass("City");
+        KMetaClass metaClassDistrict = metaModel.addMetaClass("District");
+
         metaClassCity.addAttribute("name", KPrimitiveTypes.STRING);
 
-        KMetaClass metaClassDistrict = metaModel.addMetaClass("District");
         metaClassDistrict.addAttribute("name", KPrimitiveTypes.STRING);
         metaClassDistrict.addAttribute("nbcitizen", KPrimitiveTypes.LONG);
+
         //create the reference districts from City to district with multiplicity 0..*
         metaClassCity.addReference("districts", metaClassDistrict, null, true);
 
