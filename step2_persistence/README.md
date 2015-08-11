@@ -1,190 +1,82 @@
-The Kevoree Modeling Framework Tutorial: STEP 0 Hello World
+The Kevoree Modeling Framework Tutorial: STEP 2 Persistence
 ==============================================
 
-This initial step in the KMF tutorial will help you to define an initial metaodel, generate the associated code and manipulate the asynchronous API to fill and traverse some data.
+This step of the KMF tutorial will guide you through how to persist your data.
 
-Project setup:
+Object Persistence
 -------------
+KMF offers an interface for object persistence and an API to seamlessly persist objects and load objects back from a data store into main memory.
+This interface only requires a **key/value** semantic.  
+Thereby, KMF doesn't reimplement a database. 
+Instead, already existing and proven databases are reused.
+Different driver implementations allow to choose the data backend which is most appropriate for your application, e.g., Google's LevelDB, MongoDB, or Facebook's RocksDB.   
+However, KMF provides the necessary APIs for persisting and accessing the data. 
+Every KMF object comes with a mechanism to serialize itself to a JSON-like, but highly compacted, format.
+A in this way serialized object is referred to as a **chunk**. 
+Chunks contain both attributes and relationships of the serialized object. 
+A chunk is the unit of persistence in KMF, meaning that chunks are used as the values to persist. 
+Keys are used to load chunks back form a persistent storage to main memory. 
+This simple but powerful mechanism allows to directly persist objects (via chunks) without costly mapping them to another format.
+In other words it makes it unnecessary to use any object mappers and avoids any kind of impedance mismatch. 
 
-KMF is classically using a maven project declaration.
-The two important sections that should keep your attention in the pom.xml file is the declaration of the Kevoree Compilation Plugin:
-
-```xml
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.kevoree.modeling</groupId>
-                <artifactId>org.kevoree.modeling.generator.mavenplugin</artifactId>
-                <version>${kmf.version}</version>
-                <executions>
-                    <execution>
-                        <id>ModelGen</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <metaModelFile>smartcity.mm</metaModelFile>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
-```
-
-This plugin defines that an input file **smartcity.mm** should be compiled into a Java at the build cycle of maven. In other words a simple 
-
-```sh
-mvn clean install
-```
-
-will generate the corresponding API and allow you to use your first KMF based model.
-and in addition the pom.xml declare a dependancy to the KMF framework through:
-
-```xml
-    <dependencies>
-        <dependency>
-            <groupId>org.kevoree.modeling</groupId>
-            <artifactId>org.kevoree.modeling.microframework</artifactId>
-            <version>${kmf.version}</version>
-        </dependency>
-    </dependencies>
-```
-
-The .mm file contains the following content:
+ 
+Setting the Persistence Store
+------------------
+First of all, one has to set the persistence store which should be used for storing the data. 
+In this tutorial we will use Google's LevelDB since it is easy to embed in applications and doesn't require a complex setup. 
+The following code shows how to configure KMF to use LevelDB as its persistent storage. 
 
 ```java
-class smartcity.City {
-    att name : String
-    ref* districts: smartcity.District
-}
-class smartcity.District {
-    att name: String
-    ref* sensors: smartcity.Sensor
-}
-class smartcity.Contact {
-    att name: String
-    att email: String
-}
-class smartcity.Sensor {
-    att name: String
-    att value: Double
+final String storagePath = "/myApp/db/";
+final KDataManager dm = DataManagerBuilder.create().withContentDeliveryDriver(new LevelDbContentDeliveryDriver(storagePath)).build();
+final SmartCityModel model = new SmartcityModel(dm);
+```
+KMF comes with driver implementations for several widely used NoSQL databases. 
+Nonetheless, it is easy to provide custom driver implementations to connect additional databases. 
+Driver implementations just need to implement the **KContentDeliveryDriver** interface:
+
+```java
+public interface KContentDeliveryDriver {
+    void get(long[] keys, KCallback<String[]> callback);
+    void atomicGetIncrement(long[] key, KCallback<Short> cb);
+    void put(long[] keys, String[] values, KCallback<Throwable> error, int excludeListener);
+    void remove(long[] keys, KCallback<Throwable> error);
+    void connect(KCallback<Throwable> callback);
+    void close(KCallback<Throwable> callback);
+    int addUpdateListener(KContentUpdateListener interceptor);
+    void removeUpdateListener(int id);
 }
 ```
 
-Here we define a very simple metamodel, the **att** keyword defines the attributes of the class which can be only primitives types such as String, Long, Int, Bool, Double.
-References between metaclasses are declares through the ref and ref* keywords that respectively define a single and multiple references.
-
-
-Initial usage of the API:
-------------------------
-
-The first to do in a Java program is the creation of a model instance that can be performed through the following line with default options (details of options will be covered in next steps).
+Persisting Data
+---------------
+After the persistent store is setup, KMF can be used to persist data.
+Please note that the model must be connected and the root must be set before data can be persisted. 
+The following code snipped shows how all objects of a model are persisted. 
 
 ```java
-final SmartCityModel model = new SmartcityModel(DataManagerBuilder.buildDefault());
+    model.save(new KCallback<Throwable>() {
+        @Override
+        public void on(Throwable t) {
+            // do something
+        }
+   });
 ```
-
-Then a model should be connected throught a connect method and a callback should be given to continue once this is done.
-
-Then to manipulate a model easily we create a view. A view is associate to a point in time and a universe (details of time and universe will be covered later, here its time 0 and universe 0)
+Like all methods in KMF, the **save** method is an asynchronous method. 
+It expects a callback as input which **on** method is called when the **save** operation finishes.
+In case of an error the **Throwable** is passed as an argument in the **on** method. 
+Instead of callbacks, from Java 8 onwards, it is possible to use closures for the above mentioned **save** method. 
 
 ```java
-SmartCityView baseView = model.universe(BASE_UNIVERSE).time(BASE_TIME);
+    model.save(t -> {
+        // do something
+    });
 ```
 
-From this view, man can now create some objects, set some values and their results in JSON format.
+KMF maintains the information about which objects have been actually modified and only updates/persists the necessary ones.
+ 
+ 
+Loading Data
+--------------
 
-```java
-//create one smartCity
-City city = baseView.createCity();
-city.setName("MySmartCity");
-//Print the single object: city
-System.out.println("NewCreatedCity==>" + city.toJSON());
-//Add two empty district
-District newDistrict_1 = baseView.createDistrict();
-newDistrict_1.setName("District_1");
-```
-
-Objects can also be create outside of the view by giving directly the time and universe value (in double)
-
-```java
-District newDistrict_2 = model.createDistrict(BASE_UNIVERSE, BASE_TIME);
-newDistrict_2.setName("District_1");
-```
-
-To add an object in a relationship, man can use add<refName> methods such as:
-
-```java
-city.addDistricts(newDistrict_1);
-city.addDistricts(newDistrict_2);
-```
-
-The City object and associated objects can be saved as JSON using the following line:
-
-```java
-baseView.json().save(city, new KCallback<String>() {
-    @Override
-    public void on(String savedFullView) {
-        System.out.println("FullModel:" + savedFullView);
-    }
-});
-```
-
-Root index:
-----------
-
-The KMF can offer several index to retrieve objects and then navigate to siblings, the main one is called root.
-A root can be set through the KView as (here the city is set as the root of the model):
-
-```java
-baseView.setRoot(city, new KCallback<Throwable>() {
-```
-
-Later to retrieve the root for a point in time and universe, man can do:
-
-```java
-baseView.getRoot(new KCallback<KObject>() {
-    public void on(KObject resolvedRoot) {
-            ...
-```
-
-The root is resolved and given in the callback result as any KMF Object (aka KObject).
-
-First usage of traversal:
-------------------------
-
-A traversal can be create from any object in the model.
-For instance using:
-
-```java
-resolvedRoot.traversal()
-```
-
-From this traversal object, man can chain recursive navigation that will be executed in an optimal way at runtime.
-
-Such as traversing all objects of the relationship DISTRICT from an object CITY
-
-```java
-resolvedRoot.traversal().traverse(MetaCity.REF_DISTRICTS).then(new KCallback<KObject[]>() {
-    @Override
-    public void on(KObject[] kObjects) {
-```
-
-As results, a traversal will give you an array of objects that are the results of the traverse operation, here all objects reachable from the city and through the relationship district.
-It also important to notice that all metaClass have a companion object that give a quick acess to RelationShip definition that can be used to configure traversal such as MetaCity.
-
-Finally a traversal can also contains several traversal steps, such as traversal additional the all sensors.
-
-```java 
-resolvedRoot.traversal().traverse(MetaCity.REF_DISTRICTS).traverse(MetaDistrict.REF_SENSORS).then(new KCallback<KObject[]>() {
-    @Override
-    public void on(KObject[] kObjects) {
-```
-
-As results here all sensors reachable from all district them self reachable from the city will be given as result.
-
-
-
-
+ 
