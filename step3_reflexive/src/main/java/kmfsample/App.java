@@ -1,5 +1,6 @@
 package kmfsample;
 
+import org.kevoree.modeling.KCallback;
 import org.kevoree.modeling.KModel;
 import org.kevoree.modeling.KObject;
 import org.kevoree.modeling.memory.manager.DataManagerBuilder;
@@ -47,8 +48,8 @@ public class App {
             district_2.setByName("nbcitizen", 50000);
 
             //Add the two district to the City
-//            city.addByName("districts", district_1);
-//            city.addByName("districts", district_2);
+            city.addByName("districts", district_1);
+            city.addByName("districts", district_2);
 
             //Save the full model as JSON in the console
             model.universe(BASE_UNIVERSE).time(BASE_TIME).json().save(city, System.out::println);
@@ -67,8 +68,11 @@ public class App {
             //Finally any object have a UUID and can be retrieve from it
             long cityUUID = city.uuid();
             System.out.println("City uuid=" + cityUUID);
-            model.lookup(BASE_UNIVERSE, BASE_TIME, cityUUID, resolvedObject -> {
-                System.out.println("Resolved=" + resolvedObject.toJSON());
+            model.lookup(BASE_UNIVERSE, BASE_TIME, cityUUID, new KCallback<KObject>() {
+                @Override
+                public void on(KObject resolvedObject) {
+                    System.out.println("Resolved=" + resolvedObject.toJSON());
+                }
             });
 
         });
