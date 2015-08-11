@@ -9,16 +9,16 @@ Step 1: Advanced traversal, Query and async API with Defer objects manipulation
 
 Step 2: Persistent models 
 
-Step 3: Time distortion, universe distortion
+Step 3: Reflexive API
 
-Step 4: Initial Machine learning with precision definition
+Step 4: Time distortion, universe distortion
 
-Step 5: Reflexive API
+Step 5: Initial Machine learning with precision definition
 
 Step 6: Distributed Modeling through WebSocket, Reactive Modeling through listeners
 
-Step 8: Isomorphic JS API
+Step 7: Isomorphic JS API
 
-Step 9: Template engine and Graph visualisation 
+Step 8: Template engine and Graph visualisation 
 
-Step 10: KInfer and advanced machine learning example
+Step 9: KInfer and advanced machine learning example
