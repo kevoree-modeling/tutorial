@@ -6,7 +6,7 @@
     <groupId>org.kevoree.modeling.tutorial</groupId>
     <artifactId>step2_persistence</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>Kevoree :: Modeling :: Tutorial :: Step2_Persistence</name>
+    <name>Kevoree :: Modeling :: Tutorial :: Step4_Distortion</name>
 
     <properties>
         <kmf.version>4.20.1</kmf.version>
@@ -17,11 +17,6 @@
         <dependency>
             <groupId>org.kevoree.modeling</groupId>
             <artifactId>org.kevoree.modeling.microframework</artifactId>
-            <version>${kmf.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.kevoree.modeling</groupId>
-            <artifactId>org.kevoree.modeling.microframework.drivers.leveldb</artifactId>
             <version>${kmf.version}</version>
         </dependency>
     </dependencies>

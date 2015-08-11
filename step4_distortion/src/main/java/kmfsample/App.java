@@ -1,30 +1,16 @@
 package kmfsample;
 
-import org.kevoree.modeling.cdn.KContentDeliveryDriver;
-import org.kevoree.modeling.drivers.leveldb.LevelDbContentDeliveryDriver;
 import org.kevoree.modeling.memory.manager.DataManagerBuilder;
-import org.kevoree.modeling.memory.manager.internal.KInternalDataManager;
 import smartcity.*;
-
-import java.io.IOException;
 
 public class App {
 
     public static final long BASE_UNIVERSE = 0;
-
     public static final long BASE_TIME = 0;
 
     public static void main(String[] args) {
 
-        final String databasePath = "kmf/database";
-        KInternalDataManager dm = null;
-        KContentDeliveryDriver cdn = null;
-        try {
-            dm = DataManagerBuilder.create().withContentDeliveryDriver(new LevelDbContentDeliveryDriver(databasePath)).build();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        final SmartcityModel model = new SmartcityModel(dm);
+        final SmartcityModel model = new SmartcityModel(DataManagerBuilder.buildDefault());
 
         model.connect(o -> {
 
@@ -38,26 +24,43 @@ public class App {
             contatDistrict1.setName("Mr district 1");
             contatDistrict1.setEmail("contact@district1.smartcity");
             newDistrict_1.setContact(contatDistrict1);
-            District newDistrict_2 = model.createDistrict(BASE_UNIVERSE, BASE_TIME);
-            newDistrict_2.setName("District_1");
             city.addDistricts(newDistrict_1);
-            city.addDistricts(newDistrict_2);
             Sensor sensor = model.createSensor(BASE_UNIVERSE, 0);
             sensor.setName("FakeTempSensor_0");
             sensor.setValue(0.5);
-            newDistrict_2.addSensors(sensor);
 
             baseView.setRoot(city, throwable1 -> {
 
-                model.save(throwable2 -> {
+                SmartcityView t7View = model.universe(BASE_UNIVERSE).time(7);
+                District district_2_t7 = t7View.createDistrict();
+                district_2_t7.setName("district_2_t7");
 
-                    baseView.json().save(city, json -> {
-                        System.out.println(json);
-                    });
+                SmartcityView t12View = model.universe(BASE_UNIVERSE).time(12);
+                t12View.lookup(city.uuid(), city_t12 -> {
 
-                    baseView.lookup(newDistrict_1.uuid(), kObject -> {
-                        System.out.println(kObject);
-                        System.out.println(kObject.uuid() == newDistrict_1.uuid());
+                    t12View.lookup(district_2_t7.uuid(), district_2_t12 -> {
+                        ((City) city_t12).addDistricts((District) district_2_t12);
+
+                        SmartcityView t5View = model.universe(BASE_UNIVERSE).time(5);
+                        t5View.lookup(district_2_t7.uuid(), district_2_t5 -> {
+                            System.out.println(district_2_t5);
+                        });
+
+                        SmartcityView t8View = model.universe(BASE_UNIVERSE).time(8);
+                        t8View.lookup(district_2_t7.uuid(), district_2_t8 -> {
+                            System.out.println(district_2_t8);
+                        });
+                        t8View.lookup(city.uuid(), city_t8 -> {
+                            System.out.println(city_t8);
+                            System.out.println(((City) city_t8).sizeOfDistricts());
+                        });
+
+                        SmartcityView t13View = model.universe(BASE_UNIVERSE).time(13);
+                        t13View.lookup(city.uuid(), city_t13 -> {
+                            System.out.println(city_t13);
+                            System.out.println(((City) city_t13).sizeOfDistricts());
+                        });
+
                     });
                 });
 
@@ -66,5 +69,4 @@ public class App {
         });
 
     }
-
 }
