@@ -15,7 +15,7 @@ Step 4: Initial Machine learning with precision definition
 
 Step 5: Reflexive API
 
-Step 6: Distributed Modeling through WebSocket
+Step 6: Distributed Modeling through WebSocket, Reactive Modeling through listeners
 
 Step 8: Isomorphic JS API
 
