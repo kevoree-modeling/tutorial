@@ -1,7 +1,4 @@
-The Kevoree Modeling Framework Tutorial 
-========================================
-
-Step 4 Time and Universe Distortion
+Step 4: Time and Universe Distortion
 ======================================
 
 This step of the KMF tutorial will explain the meaning of time and universe in KMF and how these concepts enable the handling of temporal data and the parallel exploration of different actions. 
@@ -41,9 +38,14 @@ This is shown in the following code snipped:
 
 ```java
 SmartcityView t3View = model.universe(BASE_UNIVERSE).time(t3);
+t4View.lookup(city_t1.uuid(), kObject -> {
     Assert.assertEquals("MySmartCity_t1", kObject.getName());
 });
+```
+
+```java
 SmartcityView t4View = model.universe(BASE_UNIVERSE).time(t4);
+t4View.lookup(city_t1.uuid(), kObject -> {
     Assert.assertEquals("MySmartCity_t2", kObject.getName());
 });
 ```
@@ -51,10 +53,26 @@ To sum up, every object in KMF is always associated to a time point and whenever
 
 Meaning of Universe 
 ---------------------
+Similar to time, KMF also comes with a notion of a universe.
+The reasoning behind this concept is the possibility to explore different actions and their impacts in parallel.
+This means, that in the same manner that every object in KMF is always associated to a time point it is also associated to a universe.
+A universe can be seen as the superordinate unit where an object exists in.
+In different universes an object can exist in different versions.  
+One usage example for this is the use of multi-objective optimizations.
+Another one is reasoning processes which apply different actions and explore which set of actions leads in a long run to the better overall result. 
+The following code snipped shows how two different universes are created and used.
 
+```java
+SmartcityView u0View = model.universe(0).time(BASE_TIME);
+final City city = u0View.createCity();
+city.setName("Universe_0");    
+
+SmartcityView u1View = model.universe(1).time(BASE_TIME);
+u1View.lookup(city.uuid(), kObject -> {
+    Assert.assertNull(kObject);
+});
+```
 
 Time and Universe Distortion: KMFs Data Resolution Strategy
 ------------------------------------------------------------
-#A common approach consists in a temporal discretization, which regularly samples the data (snapshots) at specific timestamps to keep track of the history.
-#Reasoning processes would then need to mine a huge amount of data, extract a relevant view, and finally analyze it. This would require lots of computational power and be time-consuming
 

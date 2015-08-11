@@ -1,7 +1,4 @@
-The Kevoree Modeling Framework Tutorial 
-========================================
-
-STEP 1 Asynchronous Model Manipulation
+Step 1: Asynchronous Model Manipulation
 ======================================
 
 This step of the KMF tutorial will guide you through the asynchronous manipulation of models and a query language to traverse and collect data.

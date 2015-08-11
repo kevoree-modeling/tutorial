@@ -1,5 +1,5 @@
-The KMF Tutorial: Step 2 Persistence
-==============================================
+Step 2: Persistence
+======================
 
 This step of the KMF tutorial will guide you through how to persist your data.
 
