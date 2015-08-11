@@ -1,34 +1,36 @@
-The Kevoree Modeling Framework Tutorial: 
+The Kevoree Modeling Framework Tutorial 
 ========================================
 
-STEP 3 Reflexive (Meta)Model manipulation:
+STEP 3 Reflexive (Meta) Model Manipulation
 ======================================
 
 This step of the KMF tutorial will guide you through the reflexive manipulation of models. 
-This tutorial demonstrate the ability to use KMF without code generation phase, which can make it more handy for dynamic environment.
-This usage has nearly no impact on performance, reflexive are only more difficult to maintain in software due to plain name in string.
+This tutorial demonstrates the ability to use KMF without the need for code generation.
+This can ease the development for highly dynamic environments.
+The reflexive usage of KMF has nearly no performance impact.
 
-Its important to notice here the change in the POM.xml file, there is no .mm file defined, and no KMF compiler plugin activated.
-Here this project use plain Java with only one dependency to the KMF framework.
+Its important to notice the change in the **pom.xml** file, there is no .mm file, and no KMF compiler plugin activated.
+This project use plain Java with only one dependency to the KMF framework.
 
-MetaModel reflexive creation:
+Reflexive Creation of Meta Models 
 ----------------------------
 
-Hereafter, we create reflexively the same MetaModel than the step 0 to 2.
-First of all, we create a metaModel (same than the .mm file):
+Hereafter, we create reflexively the same meta model than used in the step 0 to 2.
+First of all, we create a meta model (same than the .mm file):
 
 ```java
 KMetaModel metaModel = new MetaModel("SmartCityMetaModel");
 ```
 
-Then we add two metaClass City and District.
+Then we add the two meta classes **City** and **District**.
 
 ```java
 KMetaClass metaClassCity = metaModel.addMetaClass("City");
 KMetaClass metaClassDistrict = metaModel.addMetaClass("District");
 ```
 
-For each metaClass we add some attributes, the metaType is specified through an enum KPrimitiveTypes:
+For each meta class we add attributes. 
+The meta types of attributes are defined in the enum **KPrimitiveTypes**:
 
 ```java
 metaClassCity.addAttribute("name", KPrimitiveTypes.STRING);
@@ -36,18 +38,18 @@ metaClassDistrict.addAttribute("name", KPrimitiveTypes.STRING);
 metaClassDistrict.addAttribute("nbcitizen", KPrimitiveTypes.LONG);
 ```
 
-Finally we add the reference districts to the metaClass City using as target type the metaClassDistrict.
-The null parameter mean that we did not specify name for the opposite relationName (op_relName by default then). 
-The true parameter means that this relationship is multiple (as multiplicity 0..* in UML or ECORE)
+Finally, we add the reference districts to the meta class **City** using as target type the **metaClassDistrict**.
+The null parameter means that we don't specify a name for the opposite relation (op_relName by default). 
+The true parameter means that this relationship is to-many (as multiplicity 0..* in UML and Ecore).
 
 ```java
 metaClassCity.addReference("districts", metaClassDistrict, null, true);
 ```
 
-Model reflexive creation:
+Reflexive Model Creation
 ----------------------------
 
-From a metaModel we can create a model instance using:
+From a meta model we can create a model instance using:
 
 ```java
 KModel model = metaModel.createModel(DataManagerBuilder.buildDefault());
@@ -59,45 +61,45 @@ From this we can connect:
 model.connect(o -> {  });
 ```
 
-In the connect closure, we can initiate some objects, like a city using the metaClass name:
+In the connect closure, we can initiate objects, like a city, using the meta class name
 
 ```java
 KObject city = model.createByName("City", BASE_UNIVERSE, BASE_TIME);
 ```
 
-or a district using directly the metaClass
+or a district using directly the meta class
  
 ```java
 KObject district_1 = model.create(metaClassDistrict, BASE_UNIVERSE, BASE_TIME);
 ```
 
-Additionally we can reflexively set some attribute values:
+Additionally, we reflexively can set attribute values
 
 ```java
 district_1.setByName("name", "District_1");
 district_1.setByName("nbcitizen", 10000);
 ```
 
-and even add an object to a relationship using the name, such as:
+or add an object to a relationship using a name:
 
 ```java
 city.addByName("districts", district_1);
 city.addByName("districts", district_2);
 ```
 
-To see the result of this model, we can serialize it to the console:
+To see the structure of this model, we can serialize it to the console:
 
 ```java
 model.universe(BASE_UNIVERSE).time(BASE_TIME).json().save(city, System.out::println);
 ```
 
-Visit API:
+Visit API
 ----------
 
 The visit API is available on any KObject.
-This API is composed by two method **visit** and **visitAttributes**.
+This API is composed by two methods **visit** and **visitAttributes**.
 
-Using the visit method, man can pass on all children object from the source of the visit:
+Using the visit method, one can pass all children objects from the source of the visit:
 
 ```java
 city.visit(elem -> {
@@ -106,10 +108,10 @@ city.visit(elem -> {
 }, o1 -> System.out.println("End of the visit"));
 ```
 
-This example show the complete visit of a city, which end on the call of the last closure to be informed that all object has been visited.
-During the visit, users have the ability to stop the visit by returning not a CONTINUE but a VISIT_STOP.
+This example shows the complete visit of a city, which ends on the call of the last closure to be informed that all objects have been visited.
+During the visit, users have the ability to stop the visit by returning VISIT_STOP instead of CONTINUE.
 
-Similarly the visitAttributes method allows to visit all attributes of an object, such as:
+Similarly, the **visitAttributes** method allows to visit all attributes of an object, e.g.,:
 
 ```java
 city.visitAttributes((metaAttribute, value) -> {
@@ -117,11 +119,12 @@ city.visitAttributes((metaAttribute, value) -> {
 });
 ```
 
-Lookup API:
+Lookup API
 ----------
 
-All KObject have a unique UUID, during their all lifecycle (immutable, regardless where the object is stored).
-This UUID can be used to quickly retrieve an object from the model, such as:
+All **KObject**s have a unique UUID, during their lifecycle (immutable, regardless where the object is stored).
+This UUID can be used to quickly retrieve an object from a model.
+This is shown in the following code snippet:
 
 ```java
 long cityUUID = city.uuid();
