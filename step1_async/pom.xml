@@ -9,7 +9,7 @@
     <name>Kevoree :: Modeling :: Tutorial :: Step1_Async</name>
 
     <properties>
-        <kmf.version>4.20.1</kmf.version>
+        <kmf.version>4.20.2-SNAPSHOT</kmf.version>
         <!-- Change this version to the last release -->
     </properties>
 
