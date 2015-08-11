@@ -1,22 +1,22 @@
-The Kevoree Modeling Framework Tutorial: 
+The Kevoree Modeling Framework Tutorial 
 ========================================
 
-STEP 1 Asynchronous Model Manipulation:
+STEP 1 Asynchronous Model Manipulation
 ======================================
 
-This step of the KMF tutorial will guide you through the asynchronous manipulation of models and advanced usage of the query language available to traverse and collect your data.
+This step of the KMF tutorial will guide you through the asynchronous manipulation of models and a query language to traverse and collect data.
 
 Java 8 Closure API
 ------------------
 
-Java 8 introduces new closure expression which are particularly useful for asynchronous code such as KMF model manipulation.
-Indeed the previous heavy KCallback declaration can became a very simple :
+Java 8 introduced a new closure expression, which is very useful for KMFs asynchronous calls.
+This simplifies the previously necessary and a little bit heavy KCallback declaration:
  
 ```java
  model.connect(o -> { });
 ```
 
-Inside the connection callback (now closure) we can instantiate a similar metamodel to the previous step:
+Inside the connection callback (now closure) we can instantiate meta model in a way similar to the previous step:
 
 ```java
 SmartcityView baseView = model.universe(BASE_UNIVERSE).time(BASE_TIME);
@@ -34,11 +34,11 @@ sensor.setValue(0.5);
 newDistrict_2.addSensors(sensor);
 ```
 
-Selector API:
+Selector API
 ------------
 
-From a **KView** or any **KObject**, man can execute a selector, which is the textual representation of a traversal task aiming as collecting data.
-To be more readable we declare a static method to print results for next code snippets:
+From a **KView** or any **KObject**, one can execute a selector, which is the textual representation of a traversal task aiming at collecting data.
+To be more readable we declare a static method to print results for the following code snippets:
 
 ```java
 public static void printObjects(Object[] objs) {
@@ -53,21 +53,22 @@ public static void printObjects(Object[] objs) {
 }
 ```
 
-Each query are build using a similar principle than UNIX PIPE command, results from the previous step are inject as input of the next step.
-In our queries, step are chained from LEFT to RIGHT and separated by PIPE.
-Therefore a FILTER_A which will extract some data and then filter it with FILTER_B will be written:
+Each query is build using a principle similar to the UNIX PIPE command. 
+Results from a previous step are injected as input of the next step.
+In our queries, steps are chained from **left** to **right** and separated by a **pipe**.
+Therefore, a FILTER_A which extracts data and then applies a filter FILTER_B would be written like this:
 
 ```sh
 FILTER_A | FILTER_B
 ```
 
-Now we can go for an example, where we extract the root index (@indexName) and send it to the print method:
+Now we can look at an example, where we extract the root index (@indexName) and send it to the print method:
 
 ```java
 baseView.select("@root", extractedObjects -> printObjects(extractedObjects));
 ```
 
-Traversal can be piped, therefore after traversing the root, the query can collect all reachable districts without filter on atrributes []
+Traversals can be piped, therefore after traversing the root, the query can collect, for example, all reachable districts without filter on atrributes []
 
 ```java
 baseView.select("@root | districts[] ", extractedObjects -> printObjects(extractedObjects));
@@ -79,20 +80,22 @@ Here is a similar example with a filter on attribute:
 baseView.select("@root | districts[name=District_2] ", extractedObjects -> printObjects(extractedObjects));
 ```
 
-In addition, KMF queries accept wildcard to define name or even value in filters
+In addition, KMF queries accept wildcards to define names or even values in filters
 
 ```java
 baseView.select("@root | district*[na*=*trict_*]", extractedObjects -> printObjects(extractedObjects));
 ```
 
-All relationships in KMF are both way navigable, this mean that they can be traverse in a reverse way by specifying the << prefix or >> for the classic way.
-Hereafter for instance it allows to come back to the city from the districts. This can allows to filter at a lower level and then continue only with reachable top level objects. 
+All relationships in KMF are bidirectional (navigable in both directions).
+This means that they can be traversed in a reverse way by specifying the **<<** prefix or **>>** for the standard way.
+Hereafter, for instance it allows to navigate back to the city from its districts.
+This allows to filter at a lower level and then continue only with reachable top level objects. 
 
 ```java
 baseView.select("@root | >>districts[*] | <<districts ", extractedObjects -> printObjects(extractedObjects));
 ```
 
-By using a = prefix after a pipe, man can engage a math mode where classical math expression can be combined with object attributes values to extract pre-computed data.
+By using a **=** prefix after a pipe, one can engage a math mode where a math expression can be combined with object attribute values to extract precomputed data.
 In the following example the value (attribute of the sensor) is combined using classic math division and multiplication operations.
 
 ```java
@@ -102,27 +105,25 @@ baseView.select("@root | districts[*] | sensors[] | =(3.5+value*8-14/7)%4 ", ex
 KDefer API:
 -----------
 
-To avoid the callback hell well know problem, KMF offer a collector object named KDefer.
-KDefer is a mix of Deferrable and Promise construction classically founded in asynchronous and reactive programing.
-A KDefer object can be created from the model using the following line:
-
+To avoid what is sometimes referred to as **callback hell**, KMF offers a collector object called **KDefer**.
+KDefer is a mix of a deferrable and a promise, which are often used in asynchronous and reactive programing paradigms.
+A KDefer object can be created from any model using the following code:
 
 ```java
 KDefer defer = model.defer();
 ```
-
-Then this object can be use to generate callback that can be used for method which gave results asynchronously such as lookup of select:
+This object can be use to generate a callback that can be used for methods, which yield their results asynchronously.
+An example is the **select** operation:
 
 ```java
 baseView.select("@root | districts[*] | sensors[] | =value ", defer.waitResult());
 baseView.select("@root | districts[*] | sensors[] | =(3.5+value*8-14/7)%4 ", defer.waitResult());
 ```
-
-Finally, once everything is configure, the KDefer can receive its final callback, triggered only when all results will be collected:
+Finally, once everything is configured, the KDefer can receive its final callback, triggered only when all results have been collected:
 
 ```java
-defer.then(resultSets -> { });
+defer.then(resultSet -> { });
 ```
 
-The resultSet object is an array of objects, which has exactly the same size than the number of callback created (also ordered in the same way).
-If results are also object array such as the case of selector methods, then the resultSets is an array of array.
+The **resultSet** object is an array of objects, which has exactly the same size than the number of created callbacks (ordered in the same way).
+If the results are also arrays, like it is the case for the selector methods, then the **resultSet** is an array of arrays.

@@ -1,4 +1,7 @@
-The Kevoree Modeling Framework Tutorial: STEP 0 Hello World
+The Kevoree Modeling Framework Tutorial 
+========================================
+
+STEP 0 Hello World
 ==============================================
 
 This initial step of the KMF tutorial will help you to define an initial meta model, generate the associated code, and use the asynchronous API to create and traverse objects.
@@ -78,7 +81,7 @@ Here we define a very simple meta model with a custom DSL, the **att** keyword d
 References between meta classes are declared through the **ref** and **ref*** keywords that define a to-one respectively too-many references.
 
 
-Simple API Usage:
+Simple API Usage
 ------------------------
 
 The first thing to do in a Java program is the creation of a model instance, which can be done through the following code with default options (details of options will be covered in the next steps).
@@ -134,7 +137,7 @@ baseView.json().save(city, new KCallback<String>() {
 });
 ```
 
-Root Index:
+Root Index
 ----------
 
 KMF offers several indexes to retrieve objects and then to navigate to siblings.
@@ -155,7 +158,7 @@ baseView.getRoot(new KCallback<KObject>() {
 
 The root is resolved and given in the callback result as any KMF Object (KObject).
 
-Simple Traversal Usage:
+Simple Traversal Usage
 ------------------------
 
 A traversal can be created from any **KObject** in the model.
