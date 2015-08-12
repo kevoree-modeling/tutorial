@@ -1,5 +1,7 @@
 package kmfsample;
 
+import org.kevoree.modeling.KUniverse;
+import org.kevoree.modeling.KView;
 import org.kevoree.modeling.cdn.KContentDeliveryDriver;
 import org.kevoree.modeling.drivers.leveldb.LevelDbContentDeliveryDriver;
 import org.kevoree.modeling.memory.manager.DataManagerBuilder;
@@ -16,7 +18,10 @@ public class App {
 
     public static void main(String[] args) {
 
+        // the relative path to the database (the LevelDB files will be created in this directory)
         final String databasePath = "kmf/database";
+
+        // setting the content delivery driver to LevelDB
         KInternalDataManager dm = null;
         KContentDeliveryDriver cdn = null;
         try {
@@ -26,8 +31,10 @@ public class App {
         }
         final SmartcityModel model = new SmartcityModel(dm);
 
+        // first, connect the model
         model.connect(o -> {
 
+            // build the model
             SmartcityView baseView = model.universe(BASE_UNIVERSE).time(BASE_TIME);
 
             City city = baseView.createCity();
@@ -47,24 +54,25 @@ public class App {
             sensor.setValue(0.5);
             newDistrict_2.addSensors(sensor);
 
+            // set the root
             baseView.setRoot(city, throwable1 -> {
 
-                model.save(throwable2 -> {
+                // save the model
+                model.save(t -> {
+                    KUniverse universe = model.universe(BASE_UNIVERSE);
+                    final KView lookupView = universe.time(BASE_TIME);
 
-                    baseView.json().save(city, json -> {
-                        System.out.println(json);
-                    });
-
-                    baseView.lookup(newDistrict_1.uuid(), kObject -> {
+                    model.manager().getRoot(lookupView.universe(), lookupView.now(), kObject -> {
                         System.out.println(kObject);
-                        System.out.println(kObject.uuid() == newDistrict_1.uuid());
                     });
+
+                    lookupView.select("@root", kObjects -> {
+                        System.out.println(kObjects);
+                    });
+
                 });
-
             });
-
         });
 
     }
-
 }

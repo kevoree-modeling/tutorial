@@ -23,7 +23,15 @@ In other words it makes it unnecessary to use any object mappers and avoids any 
 Setting the Persistence Store
 ------------------
 First of all, one has to set the persistence store which should be used for storing the data. 
-In this tutorial we will use Google's LevelDB since it is easy to embed in applications and doesn't require a complex setup. 
+In this tutorial we will use Google's LevelDB since it is easy to embed in applications and doesn't require a complex setup.
+First of all, we have to add the driver for LevelDB as a maven dependency:
+```java
+<dependency>
+    <groupId>org.kevoree.modeling</groupId>
+    <artifactId>org.kevoree.modeling.microframework.drivers.leveldb</artifactId>
+    <version>${kmf.version}</version>
+</dependency>
+ ```
 The following code shows how to configure KMF to use LevelDB as its persistent storage. 
 
 ```java
@@ -84,7 +92,7 @@ Typically, navigating or traversing starts from a dedicated object, often the ro
 The root object can be retrieved like shown in the following code snippet:
 
 ```java
-    final SmartCityView lookupView = universe.time(0l);
+    final SmartCityView lookupView = universe.time(BASE_TIME);
     model.manager().getRoot(lookupView.universe(), lookupView.now(), kObject -> {
         // do something
     });
@@ -93,7 +101,7 @@ The root object can be retrieved like shown in the following code snippet:
 Since KMF doesn't just support simple persistence of objects but in addition the versioning of objects (on a per-object basis) and also provides a native notion of time and temporal data, before retrieving data it must be specified which version (or at which point in time) the objects should be retrieved. 
 This is done in the following line:
 ```java
-    final SmartCityView lookupView = universe.time(0l);
+    final SmartCityView lookupView = universe.time(BASE_TIME);
 ```
 This topic is covered in detail in step 4 of the KMF tutorial.
 For now it is just important to have a **lookupView** from where we can load our data. 
