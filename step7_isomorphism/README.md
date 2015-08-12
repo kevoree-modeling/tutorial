@@ -70,7 +70,7 @@ After a model is included, it can be used in exactly the same way then in Java:
         newDistrict_2.setName("District_1");
         city.addDistricts(newDistrict_1);
         city.addDistricts(newDistrict_2);
-        var sensor = model.createSensor(BASE_UNIVERSE, 0);
+        var sensor = model.createSensor(BASE_UNIVERSE, BASE_TIME);
         sensor.setName("FakeTempSensor_0");
         sensor.setValue(0.5);
         newDistrict_2.addSensors(sensor);

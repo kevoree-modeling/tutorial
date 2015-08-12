@@ -43,7 +43,7 @@ public class App {
                 System.out.println("ModifiedCity==>" + city.toJSON());
 
                 //Add a sensor
-                Sensor sensor = model.createSensor(BASE_UNIVERSE, 0);
+                Sensor sensor = model.createSensor(BASE_UNIVERSE, BASE_TIME);
                 sensor.setName("FakeTempSensor_0");
                 sensor.setValue(0.5);
                 //Add the sensor to district 2

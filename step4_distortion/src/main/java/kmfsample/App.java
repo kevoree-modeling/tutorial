@@ -25,7 +25,7 @@ public class App {
             contatDistrict1.setEmail("contact@district1.smartcity");
             newDistrict_1.setContact(contatDistrict1);
             city.addDistricts(newDistrict_1);
-            Sensor sensor = model.createSensor(BASE_UNIVERSE, 0);
+            Sensor sensor = model.createSensor(BASE_UNIVERSE, BASE_TIME);
             sensor.setName("FakeTempSensor_0");
             sensor.setValue(0.5);
 

@@ -11,8 +11,9 @@ import java.io.IOException;
 public class App {
 
     public static final long BASE_UNIVERSE = 0;
-
     public static final long BASE_TIME = 0;
+
+    private static final int VALUES = 1000;
 
     public static void main(String[] args) {
 
@@ -42,7 +43,7 @@ public class App {
             newDistrict_2.setName("District_1");
             city.addDistricts(newDistrict_1);
             city.addDistricts(newDistrict_2);
-            Sensor sensor = model.createSensor(BASE_UNIVERSE, 0);
+            Sensor sensor = model.createSensor(BASE_UNIVERSE, BASE_TIME);
             sensor.setName("FakeTempSensor_0");
             sensor.setValue(0.5);
             newDistrict_2.addSensors(sensor);
@@ -51,13 +52,23 @@ public class App {
 
                 model.save(throwable2 -> {
 
-                    baseView.json().save(city, json -> {
-                        System.out.println(json);
-                    });
+                    for (int i = 0; i < VALUES; i++) {
+                        SmartcityView lookupView = model.universe(BASE_UNIVERSE).time(i);
+                        final int finalI = i;
 
-                    baseView.lookup(newDistrict_1.uuid(), kObject -> {
-                        System.out.println(kObject);
-                        System.out.println(kObject.uuid() == newDistrict_1.uuid());
+                        lookupView.lookup(newDistrict_1.uuid(), kObject -> {
+
+                            double value = (finalI * Math.random());
+                            ((District) kObject).setElectricityConsumption(value);
+                            if (finalI == 5) {
+                                System.out.println(value);
+                            }
+                        });
+                    }
+
+                    SmartcityView lookupView = model.universe(BASE_UNIVERSE).time(5);
+                    lookupView.lookup(newDistrict_1.uuid(), kObject -> {
+                        System.out.println(((District) kObject).getElectricityConsumption());
                     });
                 });
 

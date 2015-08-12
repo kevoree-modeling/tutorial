@@ -49,7 +49,7 @@ public class App {
             newDistrict_2.setName("District_1");
             city.addDistricts(newDistrict_1);
             city.addDistricts(newDistrict_2);
-            Sensor sensor = model.createSensor(BASE_UNIVERSE, 0);
+            Sensor sensor = model.createSensor(BASE_UNIVERSE, BASE_TIME);
             sensor.setName("FakeTempSensor_0");
             sensor.setValue(0.5);
             newDistrict_2.addSensors(sensor);

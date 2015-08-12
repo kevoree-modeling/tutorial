@@ -12,7 +12,7 @@ We use simple machine learning techniques to store this signal data as a mathema
 This introduces a small (specifiable) error but is able to reduce the amount of needed storage. 
 We introduce a concept of continuous models that can handle high-volatile data by defining a new type of meta attribute, which represents the continuous nature of signal and sensor data.
 
-Precision Definition
+Continuous Types and Precision Definition
 ------------------
 First of all, we extend our meta model definition with a new attribute **electricityConsumption**, which is a **continuous** value (e.g., signal or sensor data).
 ```java
@@ -23,3 +23,8 @@ As can be seen in the above listing, besides declaring the attribute **electrici
 This means that the machine learning algorithm excepts a derivation 0.1 from the actual domain value when creating the polynomial representation of this value.
 The higher the precision, the less compacted the signal typically will become and vice versa.
 
+
+
+Data Economy
+------------------
+TODO time tree
