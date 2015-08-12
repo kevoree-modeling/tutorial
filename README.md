@@ -1,24 +1,22 @@
-# tutorial
-Kevoree Modeling Framework Tutorial
+# The Kevoree Modeling Framework Tutorial
 
 
+Step 0: Hello World 
 
-Step 0: Hello World and generated asynchronous API manipulation
+Step 1: Advanced Traversal, Query Language and the Asynchronous API 
 
-Step 1: Advanced traversal, Query and async API with Defer objects manipulation
-
-Step 2: Persistent models 
+Step 2: Persistence 
 
 Step 3: Reflexive API
 
-Step 4: Time distortion, universe distortion
+Step 4: Time Distortion, Universe Distortion
 
-Step 5: Initial Machine learning with precision definition
+Step 5: Machine learning with Precision Definition
 
-Step 6: Distributed Modeling through WebSocket, Reactive Modeling through listeners
+Step 6: Distributed and Reactive Modeling 
 
-Step 7: Isomorphic JS API
+Step 7: Isomorphic JavaScript API
 
-Step 8: Template engine and Graph visualisation 
+Step 8: Template Engine and Graph Visualisation 
 
-Step 9: KInfer and advanced machine learning example
+Step 9: KInfer and Advanced Machine Learning Examples
