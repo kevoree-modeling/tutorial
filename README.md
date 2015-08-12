@@ -11,7 +11,7 @@ Step 3: Reflexive API
 
 Step 4: Time Distortion, Universe Distortion
 
-Step 5: Machine learning with Precision Definition
+Step 5: Storing Signal Data with Machine Learning
 
 Step 6: Distributed and Reactive Modeling 
 

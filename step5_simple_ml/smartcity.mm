@@ -5,6 +5,7 @@ class smartcity.City {
 
 class smartcity.District {
     att name: String
+    att electricityConsumption: Continuous with precision 0.1
     ref contact: smartcity.Contact
     ref* sensors: smartcity.Sensor
 }
