@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>KMF Tutorial, Step 7: Isomorphism</title>
+</head>
+<body>
+
+<script src="step7_isomorphism-all.js"></script>
+<script>
+    var BASE_UNIVERSE = 0;
+    var BASE_TIME = 0;
+
+    var dm = org.kevoree.modeling.memory.manager.DataManagerBuilder.buildDefault();
+    var model = new smartcity.SmartcityModel(dm);
+    var baseView = model.universe(BASE_UNIVERSE).time(BASE_TIME);
+
+    model.connect(function (connect) {
+        var city = baseView.createCity();
+        city.setName("MySmartCity");
+        var newDistrict_1 = baseView.createDistrict();
+        newDistrict_1.setName("District_1");
+        var contatDistrict1 = baseView.createContact();
+        contatDistrict1.setName("Mr district 1");
+        contatDistrict1.setEmail("contact@district1.smartcity");
+        newDistrict_1.setContact(contatDistrict1);
+        var newDistrict_2 = model.createDistrict(BASE_UNIVERSE, BASE_TIME);
+        newDistrict_2.setName("District_1");
+        city.addDistricts(newDistrict_1);
+        city.addDistricts(newDistrict_2);
+        var sensor = model.createSensor(BASE_UNIVERSE, 0);
+        sensor.setName("FakeTempSensor_0");
+        sensor.setValue(0.5);
+        newDistrict_2.addSensors(sensor);
+
+        baseView.setRoot(city, function (setRootThrowable) {
+
+            baseView.json().save(city, function (modelStr) {
+                console.log(modelStr);
+            });
+
+        });
+    });
+
+
+</script>
+
+</body>
+</html>
