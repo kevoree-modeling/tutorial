@@ -32,13 +32,11 @@ If this is setup, the connected nodes can access the model without caring where 
 
 ```java
 modelClient.connect(o -> {
-                    modelClient.lookup(BASE_UNIVERSE, BASE_TIME, city.uuid(), kObject -> {
-                        System.out.println("lookup resolve: " + kObject);
-                        System.out.println(((City) kObject).getName());
-
-                    });
-                }
-            }); 
+    modelClient.lookup(BASE_UNIVERSE, BASE_TIME, city.uuid(), kObject -> {
+        System.out.println("lookup resolve: " + kObject);
+        System.out.println(((City) kObject).getName());
+    });
+}
 ```
 
 Reactive Models
@@ -50,9 +48,9 @@ KMF allows to listen on a per-object granularity.
 This is shown in the following code snippet:
 
 ```java
-            KListener listener = modelClient.createListener(BASE_UNIVERSE);
-            listener.listen(city);
-            listener.then(updatedObject -> {
-                System.out.println("updated: " + updatedObject);
-            });
+KListener listener = modelClient.createListener(BASE_UNIVERSE);
+listener.listen(city);
+listener.then(updatedObject -> {
+    System.out.println("updated: " + updatedObject);
+});
 ```
