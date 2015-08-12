@@ -32,13 +32,6 @@ If this is setup, the connected nodes can access the model without caring where 
 
 ```java
 modelClient.connect(o -> {
-                for (int i = 0; i < NUM_ITERATIONS; i++) {
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
                     modelClient.lookup(BASE_UNIVERSE, BASE_TIME, city.uuid(), kObject -> {
                         System.out.println("lookup resolve: " + kObject);
                         System.out.println(((City) kObject).getName());
