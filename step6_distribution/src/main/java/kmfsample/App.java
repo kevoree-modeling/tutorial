@@ -1,8 +1,11 @@
 package kmfsample;
 
+import org.kevoree.modeling.KListener;
 import org.kevoree.modeling.drivers.websocket.WebSocketCDNClient;
 import org.kevoree.modeling.drivers.websocket.WebSocketGateway;
 import org.kevoree.modeling.memory.manager.DataManagerBuilder;
+import org.kevoree.modeling.memory.manager.internal.KInternalDataManager;
+import org.kevoree.modeling.scheduler.impl.ExecutorServiceScheduler;
 import smartcity.*;
 
 public class App {
@@ -10,7 +13,6 @@ public class App {
     public static final long BASE_UNIVERSE = 0;
     public static final long BASE_TIME = 0;
 
-    private static final int NUM_ITERATIONS = 1;
     public static final int PORT = 6000;
 
     public static City city;
@@ -20,7 +22,9 @@ public class App {
 
         @Override
         public void run() {
-            final SmartcityModel model = new SmartcityModel(DataManagerBuilder.create().buildDefault());
+            KInternalDataManager dm = DataManagerBuilder.create().withScheduler(new ExecutorServiceScheduler()).build();
+            final SmartcityModel model = new SmartcityModel(dm);
+
             model.connect(o -> {
 
                         SmartcityView baseView = model.universe(BASE_UNIVERSE).time(BASE_TIME);
@@ -48,26 +52,32 @@ public class App {
                                 WebSocketGateway wrapper = WebSocketGateway.exposeModel(model, PORT);
                                 wrapper.start();
 
-                                for (int i = 0; i < NUM_ITERATIONS; i++) {
-                                    try {
-                                        Thread.sleep(1000);
-                                        city.setName("MySmartCity: " + System.currentTimeMillis());
-                                        model.save(save -> {
+                                try {
+                                    Thread.sleep(1000);
+                                    city.setName("MySmartCity: " + System.currentTimeMillis());
+                                    model.save(saveExc -> {
 
-                                        });
+                                        try {
+                                            Thread.sleep(2000);
+                                            city.setName("MySmartCity: updated");
+                                            model.save(saveExc2 -> {
 
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
-                                    }
+                                            });
+
+                                        } catch (InterruptedException e) {
+                                            e.printStackTrace();
+                                        }
+                                    });
+
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
                                 }
-
                             });
 
                         });
                     }
             );
         }
-
     }
 
     static class Client implements Runnable {
@@ -77,19 +87,23 @@ public class App {
             SmartcityModel modelClient = new SmartcityModel(DataManagerBuilder.create().withContentDeliveryDriver(client).build());
             SmartcityView view = modelClient.universe(BASE_UNIVERSE).time(BASE_TIME);
             modelClient.connect(o -> {
-                for (int i = 0; i < NUM_ITERATIONS; i++) {
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
-                    modelClient.lookup(BASE_UNIVERSE, BASE_TIME, city.uuid(), kObject -> {
-                        System.out.println("lookup resolve: " + kObject);
-                        System.out.println(((City) kObject).getName());
-
-                    });
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
+
+                modelClient.lookup(BASE_UNIVERSE, BASE_TIME, city.uuid(), kObject -> {
+                    System.out.println("lookup resolve: " + kObject);
+                    System.out.println(((City) kObject).getName());
+
+                });
+            });
+
+            KListener listener = modelClient.createListener(BASE_UNIVERSE);
+            listener.listen(city);
+            listener.then(updatedObject -> {
+                System.out.println("updated: " + updatedObject);
             });
         }
     }

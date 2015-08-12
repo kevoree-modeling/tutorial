@@ -50,4 +50,16 @@ modelClient.connect(o -> {
 
 Reactive Models
 -------------
+In addition, to be able to access remote data, it is crucial for many applications to be informed about remote changes.
+This enables a reactive programming style: whenever an important change at a remote node happens, other nodes can react to these changes.
+This becomes possible due to the asynchronous core of KMF. 
+KMF allows to listen on a per-object granularity. 
+This is shown in the following code snippet:
 
+```java
+            KListener listener = modelClient.createListener(BASE_UNIVERSE);
+            listener.listen(city);
+            listener.then(updatedObject -> {
+                System.out.println("updated: " + updatedObject);
+            });
+```
