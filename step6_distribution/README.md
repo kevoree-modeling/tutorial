@@ -12,8 +12,41 @@ Basically, like for resolving the right version of an object depending on time a
 This means that while navigating a model the necessary objects are automatically resolved via KMF, regardless if these objects are available on the local node or if they must be resolved from a remote one.
 A model in this sense is always 'virtual complete' meaning that it can be fully accessed from every node, regardless where the actual data are available.
 Data are only received on demand using a lazy loading strategy. 
+As for persistence, a content delivery driver is managing the remote access. 
+In this tutorial we will use a web socket content delivery driver for the distribution.
+First, a node needs to expose its model so that other nodes can access it: 
 
+```java
+WebSocketGateway wrapper = WebSocketGateway.exposeModel(model, PORT);
+wrapper.start();
+```
 
+Then, other nodes can use a content delivery driver to connect to the exposed model:
+
+```java
+WebSocketCDNClient client = new WebSocketCDNClient("ws://localhost:" + PORT);
+SmartcityModel modelClient = new SmartcityModel(DataManagerBuilder.create().withContentDeliveryDriver(client).build());
+```
+
+If this is setup, the connected nodes can access the model without caring where the data actually comes form:
+
+```java
+modelClient.connect(o -> {
+                for (int i = 0; i < NUM_ITERATIONS; i++) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    modelClient.lookup(BASE_UNIVERSE, BASE_TIME, city.uuid(), kObject -> {
+                        System.out.println("lookup resolve: " + kObject);
+                        System.out.println(((City) kObject).getName());
+
+                    });
+                }
+            }); 
+```
 
 Reactive Models
 -------------
