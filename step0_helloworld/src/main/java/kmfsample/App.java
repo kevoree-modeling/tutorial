@@ -49,7 +49,7 @@ public class App {
                 //Add the sensor to district 2
                 newDistrict_2.addSensors(sensor);
 
-                //Here we save
+                //Here we print the complete content of the baseView in a JSON format to the console
                 baseView.json().save(city, new KCallback<String>() {
                     @Override
                     public void on(String savedFullView) {
@@ -67,6 +67,18 @@ public class App {
                             @Override
                             public void on(KObject resolvedRoot) {
                                 System.out.println("ResolvedRoot====> " + resolvedRoot);
+
+                                //Example of navigating the model
+                                city.getDistricts(new KCallback<District[]>() {
+                                    @Override
+                                    public void on(District[] districts) {
+                                        System.out.println("Navigated districts:");
+                                        for (District d : districts) {
+                                            System.out.println(d);
+                                        }
+                                        System.out.println("\n");
+                                    }
+                                });
 
                                 //Example of traversal
                                 resolvedRoot.traversal().traverse(MetaCity.REF_DISTRICTS).then(new KCallback<KObject[]>() {

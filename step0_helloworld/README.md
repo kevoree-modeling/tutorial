@@ -123,7 +123,7 @@ city.addDistricts(newDistrict_1);
 city.addDistricts(newDistrict_2);
 ```
 
-The City object and its associated objects can be printed as a JSON string using the following line:
+The City object and its associated objects can be printed as JSON-string using the following line:
 
 ```java
 baseView.json().save(city, new KCallback<String>() {
@@ -133,13 +133,17 @@ baseView.json().save(city, new KCallback<String>() {
     }
 });
 ```
+As we can see in the above code listing we first transform the content of the **baseView** object into a JSON **ModelFormat** (with the **json** method call).
+Next, with the **save** method call we save the content of the **ModelFormat** object into a string.
+Finally, we print the created string to the console. 
 
 Root Index
 ----------
 
 KMF offers several indexes to retrieve objects and then to navigate to siblings.
 The main index is called root.
-A root can be set from a **KView** (as here the city is set as the root of the model):
+A root can be set from a **KView** object. 
+In the following code snippet we set the **city** object as the root of the model:
 
 ```java
 baseView.setRoot(city, new KCallback<Throwable>() {
@@ -154,6 +158,17 @@ baseView.getRoot(new KCallback<KObject>() {
 ```
 
 The root is resolved and given in the callback result as any KMF Object (KObject).
+
+
+Simple Model Navigation
+------------------------
+From any object the model (essentially the object graph) can be navigated using standard **get** methods to traverse attributes and relationships.
+As we will see in more detail in the next step of this tutorial, method calls in KMF are asynchronous. 
+The following code fragment shows how to traverse a relationship using an asynchronous **get**-relationship method. 
+```java
+resolvedRoot.traversal()
+```
+
 
 Simple Traversal Usage
 ------------------------
