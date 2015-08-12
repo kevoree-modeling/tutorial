@@ -58,6 +58,10 @@ public class App {
                 System.out.println("eval: @root | districts[] ");
                 baseView.select("@root | districts[] ", extractedObjects -> printObjects(extractedObjects));
 
+                //Pipe the root traversal with the traverse of all district
+                System.out.println("eval: @root | districts ");
+                baseView.select("@root | districts ", extractedObjects -> printObjects(extractedObjects));
+
                 //Filter only the district 2
                 System.out.println("eval: @root | districts[name=District_2] ");
                 baseView.select("@root | districts[name=District_2] ", extractedObjects -> printObjects(extractedObjects));

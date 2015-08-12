@@ -68,20 +68,25 @@ baseView.select("@root", extractedObjects -> printObjects(extractedObjects));
 Traversals can be piped, therefore after traversing the root, the query can collect, for example, all reachable districts without filter on atrributes []
 
 ```java
-baseView.select("@root | districts[] ", extractedObjects -> printObjects(extractedObjects));
+1) baseView.select("@root | districts[] ", extractedObjects -> printObjects(extractedObjects));
+```
+The above query is equivalent to the following one:
+```java
+2) baseView.select("@root | districts ", extractedObjects -> printObjects(extractedObjects));
 ```
 
 Here is a similar example with a filter on attribute:
 
 ```java
-baseView.select("@root | districts[name=District_2] ", extractedObjects -> printObjects(extractedObjects));
+3) baseView.select("@root | districts[name=District_2] ", extractedObjects -> printObjects(extractedObjects));
 ```
 
 In addition, KMF queries accept wildcards to define names or even values in filters
 
 ```java
-baseView.select("@root | district*[na*=*trict_*]", extractedObjects -> printObjects(extractedObjects));
+4) baseView.select("@root | district*[na*=*trict_*]", extractedObjects -> printObjects(extractedObjects));
 ```
+The queries 1) to 4) all yield the same results in our example. 
 
 All relationships in KMF are bidirectional (navigable in both directions).
 This means that they can be traversed in a reverse way by specifying the **<<** prefix or **>>** for the standard way.
