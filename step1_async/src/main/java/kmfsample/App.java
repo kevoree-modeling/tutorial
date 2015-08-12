@@ -4,6 +4,7 @@ import org.kevoree.modeling.KObject;
 import org.kevoree.modeling.defer.KDefer;
 import org.kevoree.modeling.memory.manager.DataManagerBuilder;
 import smartcity.*;
+import smartcity.meta.MetaDistrict;
 
 public class App {
 
@@ -58,10 +59,6 @@ public class App {
                 System.out.println("eval: @root | districts[] ");
                 baseView.select("@root | districts[] ", extractedObjects -> printObjects(extractedObjects));
 
-                //Pipe the root traversal with the traverse of all district
-                System.out.println("eval: @root | districts ");
-                baseView.select("@root | districts ", extractedObjects -> printObjects(extractedObjects));
-
                 //Filter only the district 2
                 System.out.println("eval: @root | districts[name=District_2] ");
                 baseView.select("@root | districts[name=District_2] ", extractedObjects -> printObjects(extractedObjects));
@@ -90,6 +87,12 @@ public class App {
                 System.out.println("@root | >>districts[*] | <<districts ");
                 baseView.select("@root | >>districts[*] | <<districts ", extractedObjects -> printObjects(extractedObjects));
 
+                //These 4 queries are equivalent
+                baseView.select("@root | districts", res -> printObjects(res));
+                baseView.select("@root | districts[]", res -> printObjects(res));
+                baseView.select("@root | districts[*]", res -> printObjects(res));
+                baseView.select("@root | >>districts", res -> printObjects(res));
+
                 //The = keyword introduce the math
                 System.out.println("@root | districts[*] | sensors[] | =value ");
                 baseView.select("@root | districts[*] | sensors[] | =value ", extractedObjects -> printObjects(extractedObjects));
@@ -104,6 +107,18 @@ public class App {
                         .attributeQuery("name=District*")
                         .traverseQuery("sensors")
                         .eval("(3.5+value*8-14/7)%4", extractedObjects -> printObjects(extractedObjects));
+
+                //The traversal can be combined with withAttribute restrictions
+                city.traversal()
+                        .traverseQuery("district*")
+                        .withAttribute(MetaDistrict.ATT_NAME, "District_1")
+                        .then(extractedObjects -> printObjects(extractedObjects));
+
+                //Or in the same way with withoutAttribute restrictions
+                city.traversal()
+                        .traverseQuery("district*")
+                        .withoutAttribute(MetaDistrict.ATT_NAME, "District_1")
+                        .then(extractedObjects -> printObjects(extractedObjects));
 
                 //Finally a KDefer object allows to aggregate many asynchronous results
                 KDefer defer = model.defer();

@@ -68,26 +68,19 @@ baseView.select("@root", extractedObjects -> printObjects(extractedObjects));
 Traversals can be piped, therefore after traversing the root, the query can collect, for example, all reachable districts without filter on atrributes []
 
 ```java
-1) baseView.select("@root | districts[] ", extractedObjects -> printObjects(extractedObjects));
+baseView.select("@root | districts[] ", extractedObjects -> printObjects(extractedObjects));
 ```
-The above query is equivalent to the following one:
-```java
-2) baseView.select("@root | districts ", extractedObjects -> printObjects(extractedObjects));
-```
-
 Here is a similar example with a filter on attribute:
 
 ```java
-3) baseView.select("@root | districts[name=District_2] ", extractedObjects -> printObjects(extractedObjects));
+baseView.select("@root | districts[name=District_2] ", extractedObjects -> printObjects(extractedObjects));
 ```
 
 In addition, KMF queries accept wildcards to define names or even values in filters
 
 ```java
-4) baseView.select("@root | district*[na*=*trict_*]", extractedObjects -> printObjects(extractedObjects));
+baseView.select("@root | district*[na*=*trict_*]", extractedObjects -> printObjects(extractedObjects));
 ```
-The queries 1) to 4) all yield the same results in our example. 
-
 All relationships in KMF are bidirectional (navigable in both directions).
 This means that they can be traversed in a reverse way by specifying the **<<** prefix or **>>** for the standard way.
 Hereafter, for instance it allows to navigate back to the city from its districts.
@@ -97,11 +90,35 @@ This allows to filter at a lower level and then continue only with reachable top
 baseView.select("@root | >>districts[*] | <<districts ", extractedObjects -> printObjects(extractedObjects));
 ```
 
+The traversal can be combined with withAttribute restrictions
+```java
+city.traversal()
+    .traverseQuery("district*")
+    .withAttribute(MetaDistrict.ATT_NAME, "District_1")
+    .then(extractedObjects -> printObjects(extractedObjects));
+```
+
+Or in the same way with withoutAttribute restrictions
+```java
+city.traversal()
+    .traverseQuery("district*")
+    .withoutAttribute(MetaDistrict.ATT_NAME, "District_1")
+    .then(extractedObjects -> printObjects(extractedObjects));
+```                        
+
 By using a **=** prefix after a pipe, one can engage a math mode where a math expression can be combined with object attribute values to extract precomputed data.
 In the following example the value (attribute of the sensor) is combined using classic math division and multiplication operations.
 
 ```java
 baseView.select("@root | districts[*] | sensors[] | =(3.5+value*8-14/7)%4 ", extractedObjects -> printObjects(extractedObjects));
+```
+
+Considering the above explanations, the following 4 queries are equivalent: 
+```java
+baseView.select("@root | districts", res -> printObjects(res));
+baseView.select("@root | districts[]", res -> printObjects(res));
+baseView.select("@root | districts[*]", res -> printObjects(res));
+baseView.select("@root | >>districts", res -> printObjects(res));
 ```
 
 KDefer API:
@@ -113,7 +130,7 @@ A KDefer object can be created from any model using the following code:
 
 ```java
 KDefer defer = model.defer();
-```
+```yep
 This object can be use to generate a callback that can be used for methods, which yield their results asynchronously.
 An example is the **select** operation:
 
