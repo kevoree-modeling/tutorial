@@ -10,7 +10,7 @@
 
     <properties>
         <kmf.version>4.21.0</kmf.version>
-        <java2typescript.plugin.version>38</java2typescript.plugin.version>
+        <java2typescript.plugin.version>39-SNAPSHOT</java2typescript.plugin.version>
     </properties>
 
     <dependencies>
@@ -18,11 +18,6 @@
             <groupId>org.kevoree.modeling</groupId>
             <artifactId>org.kevoree.modeling.microframework</artifactId>
             <version>${kmf.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.kevoree.modeling</groupId>
-            <artifactId>org.kevoree.modeling.java2typescript.runtime</artifactId>
-            <version>${java2typescript.plugin.version}</version>
         </dependency>
     </dependencies>
 
@@ -41,10 +36,12 @@
                         </goals>
                         <configuration>
                             <metaModelFile>smartcity.mm</metaModelFile>
+                            <js>true</js>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -53,39 +50,7 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.kevoree.modeling</groupId>
-                <artifactId>org.kevoree.modeling.java2typescript.mavenplugin</artifactId>
-                <version>${java2typescript.plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>compile-src</id>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <source>${basedir}/../step7_isomorphism/src/main/java</source>
-                            <target>${basedir}/target/generated-sources</target>
-                            <targetJS>${basedir}/target/classes</targetJS>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>compile-test</id>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <source>${basedir}/../tutorial/step7_isomorphism/src/test/java</source>
-                            <target>${basedir}/target/generated-test-sources</target>
-                            <targetJS>${basedir}/target/test-classes</targetJS>
-                            <flatJUnit>true</flatJUnit>
-                            <libraries>
-                                <library>${basedir}/target/classes</library>
-                            </libraries>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+
         </plugins>
     </build>
 

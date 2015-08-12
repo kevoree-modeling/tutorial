@@ -1,7 +1,4 @@
-The Kevoree Modeling Framework Tutorial 
-========================================
-
-STEP 0 Hello World
+Step 0: Hello World
 ==============================================
 
 This initial step of the KMF tutorial will help you to define an initial meta model, generate the associated code, and use the asynchronous API to create and traverse objects.
@@ -142,7 +139,7 @@ Root Index
 
 KMF offers several indexes to retrieve objects and then to navigate to siblings.
 The main index is called root.
-A root can be set with a **KView** (as here the city is set as the root of the model):
+A root can be set from a **KView** (as here the city is set as the root of the model):
 
 ```java
 baseView.setRoot(city, new KCallback<Throwable>() {
