@@ -8,9 +8,13 @@ This initial step of the KMF tutorial will help you to define an initial meta mo
 
 This step of the KMF tutorial will guide you through the asynchronous manipulation of models and a query language to traverse and collect data.
 
-Step 2: Persistence
+[Step 2: Persistence Models](step2_persistence)
 
-Step 3: Reflexive API
+This step of the KMF tutorial will guide you through how to persist your data.
+
+[Step 3: Reflexive API](step3_reflexive)
+
+This step of the KMF tutorial will guide you through the reflexive manipulation of models. This tutorial demonstrates the ability to use KMF without the need for code generation.
 
 Step 4: Time Distortion, Universe Distortion
 
