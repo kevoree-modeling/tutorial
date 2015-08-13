@@ -1,6 +1,5 @@
 package kmfsample;
 
-import org.kevoree.modeling.cdn.KContentDeliveryDriver;
 import org.kevoree.modeling.drivers.leveldb.LevelDbContentDeliveryDriver;
 import org.kevoree.modeling.memory.manager.DataManagerBuilder;
 import org.kevoree.modeling.memory.manager.internal.KInternalDataManager;
@@ -19,7 +18,6 @@ public class App {
 
         final String databasePath = "kmf/database";
         KInternalDataManager dm = null;
-        KContentDeliveryDriver cdn = null;
         try {
             dm = DataManagerBuilder.create().withContentDeliveryDriver(new LevelDbContentDeliveryDriver(databasePath)).build();
         } catch (IOException e) {

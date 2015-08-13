@@ -1,5 +1,5 @@
 class smartcity.City {
-    att name : String
+    att name: String
     ref* districts: smartcity.District
 }
 
@@ -17,3 +17,4 @@ class smartcity.Sensor {
     att name: String
     att value: Double
 }
+
