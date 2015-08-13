@@ -1,6 +1,6 @@
 # The Kevoree Modeling Framework Tutorial
 
-[Step 0: Hello World ](../tree/master/step0_helloworld)
+[Step 0: Hello World ](https://github.com/kevoree-modeling/tutorial/tree/master/step0_helloworld)
 
 Step 1: Advanced Traversal, Query Language and the Asynchronous API
 
