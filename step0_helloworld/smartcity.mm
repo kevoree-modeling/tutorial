@@ -17,4 +17,3 @@ class smartcity.Sensor {
     att name: String
     att value: Double
 }
-
