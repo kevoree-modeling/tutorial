@@ -1,7 +1,10 @@
 package kmfsample;
 
 import org.kevoree.modeling.memory.manager.DataManagerBuilder;
-import smartcity.*;
+import smartcity.City;
+import smartcity.District;
+import smartcity.SmartcityModel;
+import smartcity.SmartcityView;
 
 public class App {
 
@@ -20,14 +23,7 @@ public class App {
             city.setName("MySmartCity");
             District newDistrict_1 = baseView.createDistrict();
             newDistrict_1.setName("District_1");
-            Contact contatDistrict1 = baseView.createContact();
-            contatDistrict1.setName("Mr district 1");
-            contatDistrict1.setEmail("contact@district1.smartcity");
-            newDistrict_1.setContact(contatDistrict1);
             city.addDistricts(newDistrict_1);
-            Sensor sensor = model.createSensor(BASE_UNIVERSE, BASE_TIME);
-            sensor.setName("FakeTempSensor_0");
-            sensor.setValue(0.5);
 
             baseView.setRoot(city, throwable1 -> {
 
@@ -62,11 +58,12 @@ public class App {
                         });
 
                     });
+
+                    city_t12.jump(0, city_t0 -> {
+                        System.out.println(" -> " + city_t0);
+                    });
                 });
-
             });
-
         });
-
     }
 }

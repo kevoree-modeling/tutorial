@@ -10,4 +10,8 @@ buildNumber.properties
 .DS_Store
 */.DS_Store
 *.iml
-
+*.log
+*.sst
+LOCK
+LOG
+LOG.old

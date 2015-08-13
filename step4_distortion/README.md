@@ -12,7 +12,7 @@ For this reason, KMF is designed with a native notion of time.
 Every KMF object is always associated to a time point. 
 If an object is changed at a later point in time, all older versions of the object are kept and will not be deleted by default. 
 This notion naturally defines intervals in which KMF objects are valid:
-If we create two versions of an object v<sub>t1</sub> and v<sub>t2</sub>, at t<sub>1</sub> and t<sub>2</sub>, where t<sub>1</sub> < t<sub>2</sub>, then v<sub>t1</sub> is valid from [t<sub>1</sub>, t<sub>2</sub>) and v<sub>t2</sub> is valid from [t<sub>2</sub>, unlimited).  
+If we create two versions of an object v<sub>t1</sub> and v<sub>t2</sub>, at t<sub>1</sub> and t<sub>2</sub>, where t<sub>1</sub> < t<sub>2</sub>, then v<sub>t1</sub> is valid from [t<sub>1</sub>, t<sub>2</sub>) and v<sub>t2</sub> is valid from [t<sub>2</sub>, &infin;).  
 In the following code snipped we show how to create an object at one time point and then manipulate the object at a later time point. 
 
 ```java
@@ -49,6 +49,16 @@ t4View.lookup(city_t1.uuid(), kObject -> {
     Assert.assertEquals("MySmartCity_t2", kObject.getName());
 });
 ```
+
+An alternative to the **lookup** method is the **jump** method. 
+This method is available on every **KObject** and allows to navigate through the different versions (in time), e.g.:
+```java
+city_t12.jump(0, city_t0 -> {
+    System.out.println(" -> " + city_t0);
+});
+```
+The above code resolve the **city** object for time 0. 
+
 To sum up, every object in KMF is always associated to a time point and whenever an object is somehow traversed, it is always in the context of a time point. 
 
 Meaning of Universe 
