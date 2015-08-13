@@ -23,7 +23,31 @@ As can be seen in the above listing, besides declaring the attribute **electrici
 This means that the machine learning algorithm excepts a derivation 0.1 from the actual domain value when creating the polynomial representation of this value.
 The higher the precision, the less compacted the signal typically will become and vice versa.
 
+The following code snipped shows how we gradually insert random values for the attribute **electricityConsumption** and then check the value which is derived from the actual saved polynomials.
+This value must be within the specified precision tolerance.  
 
+```java
+for (int i = 0; i < VALUES; i++) {
+    SmartcityView lookupView = model.universe(BASE_UNIVERSE).time(i);
+    final int finalI = i;
+
+    lookupView.lookup(newDistrict_1.uuid(), kObject -> {
+        double value = (finalI * Math.random());
+        ((District) kObject).setElectricityConsumption(value);
+        if (finalI == 5) {
+            System.out.println(value);
+        }
+        model.save(throwable3 -> {
+            if (finalI == VALUES - 1) {
+                SmartcityView lookupView2 = model.universe(BASE_UNIVERSE).time(5);
+                lookupView2.lookup(newDistrict_1.uuid(), kObject2 -> {
+                    System.out.println(((District) kObject2).getElectricityConsumption());
+                });
+            }
+        });
+    });
+}
+```                    
 
 Data Economy
 ------------------

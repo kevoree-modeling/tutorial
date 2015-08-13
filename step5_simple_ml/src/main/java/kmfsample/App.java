@@ -63,19 +63,20 @@ public class App {
                             if (finalI == 5) {
                                 System.out.println(value);
                             }
+
+                            model.save(throwable3 -> {
+                                if (finalI == VALUES - 1) {
+                                    SmartcityView lookupView2 = model.universe(BASE_UNIVERSE).time(5);
+                                    lookupView2.lookup(newDistrict_1.uuid(), kObject2 -> {
+                                        System.out.println(((District) kObject2).getElectricityConsumption());
+                                    });
+                                }
+                            });
                         });
                     }
-
-                    SmartcityView lookupView = model.universe(BASE_UNIVERSE).time(5);
-                    lookupView.lookup(newDistrict_1.uuid(), kObject -> {
-                        System.out.println(((District) kObject).getElectricityConsumption());
-                    });
                 });
-
             });
-
         });
-
     }
 
 }
