@@ -16,13 +16,21 @@ This step of the KMF tutorial will guide you through how to persist your data.
 
 This step of the KMF tutorial will guide you through the reflexive manipulation of models. This tutorial demonstrates the ability to use KMF without the need for code generation.
 
-Step 4: Time Distortion, Universe Distortion
+[Step 4: Time Distortion, Universe Distortion](step4_distortion)
 
-Step 5: Storing Signal Data with Machine Learning
+This step of the KMF tutorial will explain the meaning of time and universe in KMF and how these concepts enable the handling of temporal data and the parallel exploration of different actions.
 
-Step 6: Distributed and Reactive Modeling
+[Step 5: Storing Signal Data with Machine Learning](step5_simple_ml)
 
-Step 7: Isomorphic JavaScript API
+This step of the KMF tutorial will demonstrate how to define simple machine learning strategies to efficiently store a large amount of signal data via a mathematical polynomial.
+
+[Step 6: Distributed and Reactive Modeling](step6_distribution)
+
+This step of the KMF tutorial will guide you through the distributed modeling concepts of KMF.
+
+[Step 7: Isomorphic JavaScript API](step7_isomorphism)
+
+This step of the tutorial explains isomorphism and how KMF provides isomorphic models for Java and JavaScript.
 
 Step 8: Template Engine and Graph Visualisation
 
