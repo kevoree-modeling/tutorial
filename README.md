@@ -37,3 +37,5 @@ This step of the tutorial explains isomorphism and how KMF provides isomorphic m
 Step 8: Template Engine and Graph Visualisation
 
 Step 9: KInfer and Advanced Machine Learning Examples
+
+Step 10: BigData and OffHeap Models
