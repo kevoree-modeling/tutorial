@@ -25,8 +25,14 @@ enum smartcity.SensorState {
 }
 
 class smartcity.SensorStateChecker {
-    with inference "GaussianClassifier"
-    dependency evaluatedSensor: smartcity.Sensor
-    input value "@evaluatedSensor | =value"
+    with inference "GaussianAnomalyDetection"
+    att alpha: Double
+
+    dependency temperatureSensor: smartcity.Sensor
+    dependency humiditySensor: smartcity.Sensor
+
+    input value1 "@evaluatedSensor | =value"
+    input value2 "@evaluatedSensor | =value"
+
     output state: smartcity.SensorState
 }

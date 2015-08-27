@@ -36,70 +36,83 @@ public class App {
             newDistrict_2.setName("District_2");
             city.addDistricts(newDistrict_1);
             city.addDistricts(newDistrict_2);
-            Sensor sensor = model.createSensor(BASE_UNIVERSE, BASE_TIME);
-            sensor.setName("FakeTempSensor_0");
-            sensor.setValue(0.5);
-            newDistrict_2.addSensors(sensor);
+            Sensor tempsensor = model.createSensor(BASE_UNIVERSE, BASE_TIME);
+            tempsensor.setName("FakeTempSensor_0");
+            newDistrict_2.addSensors(tempsensor);
+
+            Sensor humiditysensor = model.createSensor(BASE_UNIVERSE, BASE_TIME);
+            humiditysensor.setName("FakeTempSensor_0");
+            newDistrict_2.addSensors(humiditysensor);
 
             //KInfer are classical object, so lets attach it a district
             SensorStateChecker checker = model.createSensorStateChecker(BASE_UNIVERSE, BASE_TIME);
             newDistrict_2.setChecker(checker);
 
-            trainSensorChecker(model, sensor, checker, o1 -> {
+            System.out.println("test1");
+            trainSensorChecker(model, tempsensor, humiditysensor, checker, o1 -> {
+                System.out.println("test4");
                 System.out.println("====End training === ");
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(2015, Calendar.JANUARY, Calendar.MONDAY, 0, 0);
-                sensor.jump(calendar.getTimeInMillis(), timedSensor -> {
-                    Sensor timedSensorCasted = (Sensor) timedSensor;
-                    timedSensorCasted.setValue(100.0);
-                    checker.infer(timedSensorCasted, kLiteral -> {
-                        System.out.println(timedSensorCasted.getValue()+"=>"+kLiteral.metaName());
-                    });
-
+                tempsensor.setValue(-20.0);
+                humiditysensor.setValue(0.5);
+                checker.infer(humiditysensor, tempsensor, kLiteral -> {
+                    System.out.println(tempsensor.getValue() + " , " + humiditysensor.getValue() + " =>" + kLiteral.metaName());
                 });
+
+                tempsensor.setValue(10.0);
+                humiditysensor.setValue(0.5);
+                checker.infer(humiditysensor, tempsensor, kLiteral -> {
+                    System.out.println(tempsensor.getValue() + " , " + humiditysensor.getValue() + " =>" + kLiteral.metaName());
+                });
+
+                tempsensor.setValue(100.0);
+                humiditysensor.setValue(0.5);
+                checker.infer(humiditysensor, tempsensor, kLiteral -> {
+                    System.out.println(tempsensor.getValue() + " , " + humiditysensor.getValue() + " =>" + kLiteral.metaName());
+                });
+
+                tempsensor.setValue(-20.0);
+                humiditysensor.setValue(0.0);
+                checker.infer(humiditysensor, tempsensor, kLiteral -> {
+                    System.out.println(tempsensor.getValue() + " , " + humiditysensor.getValue() + " =>" + kLiteral.metaName());
+                });
+
+                tempsensor.setValue(10.0);
+                humiditysensor.setValue(1.0);
+                checker.infer(humiditysensor, tempsensor, kLiteral -> {
+                    System.out.println(tempsensor.getValue() + " , " + humiditysensor.getValue() + " =>" + kLiteral.metaName());
+                });
+
+                tempsensor.setValue(100.0);
+                humiditysensor.setValue(0.0);
+                checker.infer(humiditysensor, tempsensor, kLiteral -> {
+                    System.out.println(tempsensor.getValue() + " , " + humiditysensor.getValue() + " =>" + kLiteral.metaName());
+                });
+
             });
         });
     }
 
-    private static void trainSensorChecker(KModel model, Sensor sensor, SensorStateChecker checker, KCallback callback) {
-        KDefer defer = model.defer();
-        Random random = new Random();
-        for (int i = 0; i < 2000; i++) {
-            Calendar calendar = Calendar.getInstance();
-            if (i < 1000) {
-                calendar.set(2015, Calendar.JANUARY, Calendar.MONDAY, random.nextInt(12), 0);
-            } else {
-                calendar.set(2015, Calendar.JANUARY, Calendar.MONDAY, random.nextInt(12) + 12, 0);
+    private static void trainSensorChecker(KModel model, Sensor tempSensor, Sensor humiditySensor, SensorStateChecker checker, KCallback callback) {
+        KDefer training = model.defer();
+        Random rand=new Random();
+        System.out.println("test2");
+        for(int i=0;i<2000;i++){
+            double t=rand.nextDouble()*150-50; //generate temp from -50 to 100
+            double h=rand.nextDouble(); //generate humidity from 0 to 1
+            tempSensor.setValue(t);
+            humiditySensor.setValue(h);
+
+            if(t<0||t>40||h<0.3||h>0.7) { //accepted temperature range is 0-40, humidity range: 0.3-0.7
+                checker.train(humiditySensor,tempSensor,MetaSensorState.SUSPICIOUS, training.waitResult());
             }
-            sensor.jump(calendar.getTimeInMillis(), defer.waitResult());
+            else{
+                checker.train(humiditySensor,tempSensor,MetaSensorState.CORRECT, training.waitResult());
+            }
         }
-        defer.then(objects -> {
-            KDefer training = model.defer();
-            for (int i = 0; i < objects.length; i++) {
-                Sensor casted = (Sensor) objects[i];
-                //if (i < 100) {
-                    //train an incorrect value
-                    casted.setValue(random.nextDouble() * 5000);
-                    System.out.println(casted.getValue()+"=>"+MetaSensorState.SUSPICIOUS.metaName());
-                    checker.train(casted, MetaSensorState.SUSPICIOUS, training.waitResult());
-                    //train finally a correct value
-                    casted.setValue(random.nextDouble() * 100);
-                    System.out.println(casted.getValue() + "=>" + MetaSensorState.CORRECT.metaName());
-                    checker.train(casted, MetaSensorState.CORRECT, training.waitResult());
-                /*} else {
-                    //train finally a correct value
-                    casted.setValue(random.nextDouble() * 100);
-                    System.out.println(casted.getValue() + "=>" + MetaSensorState.SUSPICIOUS.metaName());
-                    checker.train(casted, MetaSensorState.SUSPICIOUS, training.waitResult());
-                    //train finally a correct value
-                    casted.setValue(random.nextDouble() * 5000);
-                    System.out.println(casted.getValue() + "=>" + MetaSensorState.CORRECT.metaName());
-                    checker.train(casted, MetaSensorState.CORRECT, training.waitResult());
-                }*/
-            }
-            //finally call the callback when training is finished
-            training.then(callback);
-        });
+        System.out.println("test3");
+        //finally call the callback when training is finished
+        training.then(callback);
+
     }
 
 
