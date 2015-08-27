@@ -48,45 +48,24 @@ public class App {
             SensorStateChecker checker = model.createSensorStateChecker(BASE_UNIVERSE, BASE_TIME);
             newDistrict_2.setChecker(checker);
 
-            System.out.println("test1");
+
             trainSensorChecker(model, tempsensor, humiditysensor, checker, o1 -> {
-                System.out.println("test4");
+
                 System.out.println("====End training === ");
-                tempsensor.setValue(-20.0);
-                humiditysensor.setValue(0.5);
-                checker.infer(humiditysensor, tempsensor, kLiteral -> {
-                    System.out.println(tempsensor.getValue() + " , " + humiditysensor.getValue() + " =>" + kLiteral.metaName());
-                });
 
-                tempsensor.setValue(10.0);
-                humiditysensor.setValue(0.5);
-                checker.infer(humiditysensor, tempsensor, kLiteral -> {
-                    System.out.println(tempsensor.getValue() + " , " + humiditysensor.getValue() + " =>" + kLiteral.metaName());
-                });
+                double[] temp={-20,10,30,100};
+                double[] hum={0.0,0.5,0.6,1.0};
 
-                tempsensor.setValue(100.0);
-                humiditysensor.setValue(0.5);
-                checker.infer(humiditysensor, tempsensor, kLiteral -> {
-                    System.out.println(tempsensor.getValue() + " , " + humiditysensor.getValue() + " =>" + kLiteral.metaName());
-                });
-
-                tempsensor.setValue(-20.0);
-                humiditysensor.setValue(0.0);
-                checker.infer(humiditysensor, tempsensor, kLiteral -> {
-                    System.out.println(tempsensor.getValue() + " , " + humiditysensor.getValue() + " =>" + kLiteral.metaName());
-                });
-
-                tempsensor.setValue(10.0);
-                humiditysensor.setValue(1.0);
-                checker.infer(humiditysensor, tempsensor, kLiteral -> {
-                    System.out.println(tempsensor.getValue() + " , " + humiditysensor.getValue() + " =>" + kLiteral.metaName());
-                });
-
-                tempsensor.setValue(100.0);
-                humiditysensor.setValue(0.0);
-                checker.infer(humiditysensor, tempsensor, kLiteral -> {
-                    System.out.println(tempsensor.getValue() + " , " + humiditysensor.getValue() + " =>" + kLiteral.metaName());
-                });
+                //accepted temperature range is 0-40, humidity range: 0.3-0.7
+                for(int i=0;i<temp.length;i++){
+                    tempsensor.setValue(temp[i]);
+                    for(int j=0;j<hum.length;j++){
+                        humiditysensor.setValue(hum[j]);
+                        checker.infer(humiditysensor, tempsensor, kLiteral -> {
+                            System.out.println(tempsensor.getValue() + " , " + humiditysensor.getValue() + " =>" + kLiteral.metaName());
+                        });
+                    }
+                }
 
             });
         });
