@@ -31,8 +31,8 @@ class smartcity.SensorStateChecker {
     dependency temperatureSensor: smartcity.Sensor
     dependency humiditySensor: smartcity.Sensor
 
-    input value1 "@evaluatedSensor | =value"
-    input value2 "@evaluatedSensor | =value"
+    input tempValue "@temperatureSensor | =value"
+    input humidityValue "@humiditySensor | =value"
 
     output state: smartcity.SensorState
 }
