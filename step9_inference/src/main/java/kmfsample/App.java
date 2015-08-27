@@ -62,7 +62,7 @@ public class App {
                     for(int j=0;j<hum.length;j++){
                         humiditysensor.setValue(hum[j]);
                         checker.infer(humiditysensor, tempsensor, kLiteral -> {
-                            System.out.println(tempsensor.getValue() + " , " + humiditysensor.getValue() + " =>" + kLiteral.metaName());
+                            System.out.println(tempsensor.getValue() + " , " + humiditysensor.getValue() + " => " + kLiteral.metaName());
                         });
                     }
                 }
