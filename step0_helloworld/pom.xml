@@ -9,7 +9,7 @@
     <name>Kevoree :: Modeling :: Tutorial :: Step0_Hello</name>
 
     <properties>
-        <kmf.version>4.23.1-SNAPSHOT</kmf.version>
+        <kmf.version>4.24.1-SNAPSHOT</kmf.version>
         <!-- Change this version to the last release -->
     </properties>
 

@@ -1,5 +1,5 @@
 class smartcity.City {
-    att name : String
+    att name: String
     ref* districts: smartcity.District
 }
 

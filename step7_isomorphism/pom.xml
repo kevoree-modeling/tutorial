@@ -9,8 +9,7 @@
     <name>Kevoree :: Modeling :: Tutorial :: Step7_Isomorphism</name>
 
     <properties>
-        <kmf.version>4.21.0</kmf.version>
-        <java2typescript.plugin.version>39-SNAPSHOT</java2typescript.plugin.version>
+        <kmf.version>4.24.1-SNAPSHOT</kmf.version>
     </properties>
 
     <dependencies>
