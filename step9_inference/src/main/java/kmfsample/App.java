@@ -88,7 +88,6 @@ public class App {
                 checker.train(humiditySensor,tempSensor,MetaSensorState.CORRECT, training.waitResult());
             }
         }
-        System.out.println("test3");
         //finally call the callback when training is finished
         training.then(callback);
 
