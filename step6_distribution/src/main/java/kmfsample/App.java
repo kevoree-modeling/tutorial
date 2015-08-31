@@ -1,6 +1,8 @@
 package kmfsample;
 
+import org.kevoree.modeling.KCallback;
 import org.kevoree.modeling.KListener;
+import org.kevoree.modeling.drivers.leveldb.LevelDbContentDeliveryDriver;
 import org.kevoree.modeling.drivers.websocket.WebSocketPeer;
 import org.kevoree.modeling.drivers.websocket.gateway.WebSocketGateway;
 import org.kevoree.modeling.memory.manager.DataManagerBuilder;
@@ -8,112 +10,83 @@ import org.kevoree.modeling.memory.manager.internal.KInternalDataManager;
 import org.kevoree.modeling.scheduler.impl.ExecutorServiceScheduler;
 import smartcity.*;
 
+import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
+
 public class App {
 
     public static final long BASE_UNIVERSE = 0;
     public static final long BASE_TIME = 0;
+    public static final int PORT = 7000;
+    public static final String ROOM = "myRoomID";
 
-    public static final int PORT = 6000;
+    public static CountDownLatch counterPeers = new CountDownLatch(3);
 
-    public static City city;
-
-    static class Server implements Runnable {
-
-
-        @Override
-        public void run() {
-            KInternalDataManager dm = DataManagerBuilder.create().withScheduler(new ExecutorServiceScheduler()).build();
-            WebSocketGateway wsGateway = WebSocketGateway.expose(dm.cdn(),PORT);
+    public static void main(String[] args) throws IOException, InterruptedException {
+        System.setIn(null);
+        // the relative path to the database (the LevelDB files will be created in this directory)
+        final String databasePath = "kmf/database";
+        LevelDbContentDeliveryDriver levelDB_CDN = new LevelDbContentDeliveryDriver(databasePath);
+        levelDB_CDN.connect(throwable -> {
+            //We expose this CDN to other model peers leveraging the WebSocket gateway wrapper
+            WebSocketGateway wsGateway = WebSocketGateway.expose(levelDB_CDN, PORT);
+            //we start the gateway client immediately
             wsGateway.start();
-
-            final SmartcityModel model = new SmartcityModel(dm);
-            model.connect(o -> {
-                        SmartcityView baseView = model.universe(BASE_UNIVERSE).time(BASE_TIME);
-                        city = baseView.createCity();
-                        city.setName("MySmartCity");
-                        District newDistrict_1 = baseView.createDistrict();
-                        newDistrict_1.setName("District_1");
-                        Contact contatDistrict1 = baseView.createContact();
-                        contatDistrict1.setName("Mr district 1");
-                        contatDistrict1.setEmail("contact@district1.smartcity");
-                        newDistrict_1.addContact(contatDistrict1);
-                        District newDistrict_2 = model.createDistrict(BASE_UNIVERSE, BASE_TIME);
-                        newDistrict_2.setName("District_1");
-                        city.addDistricts(newDistrict_1);
-                        city.addDistricts(newDistrict_2);
-                        Sensor sensor = model.createSensor(BASE_UNIVERSE, BASE_TIME);
-                        sensor.setName("FakeTempSensor_0");
-                        sensor.setValue(0.5);
-                        newDistrict_2.addSensors(sensor);
-                        baseView.setRoot(city, throwable1 -> {
-                            model.save(throwable2 -> {
-                                try {
-                                    Thread.sleep(1000);
-                                    city.setName("MySmartCity: " + System.currentTimeMillis());
-                                    model.save(saveExc -> {
-                                        try {
-                                            Thread.sleep(2000);
-                                            city.setName("MySmartCity: updated");
-                                            model.save(saveExc2 -> {
-
-                                            });
-                                        } catch (InterruptedException e) {
-                                            e.printStackTrace();
-                                        }
-                                    });
-
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-                            });
-
-                        });
-                    }
-            );
-        }
+            init_model(o -> {
+                for (int i = 0; i < counterPeers.getCount(); i++) {
+                    init_peer();
+                }
+            });
+            try {
+                counterPeers.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            wsGateway.stop();
+            levelDB_CDN.close(throwable1 -> {
+            });
+        });
     }
 
-    static class Client implements Runnable {
-        @Override
-        public void run() {
-            WebSocketPeer client = new WebSocketPeer("ws://localhost:" + PORT);
-            SmartcityModel modelClient = new SmartcityModel(DataManagerBuilder.create().withContentDeliveryDriver(client).build());
-            SmartcityView view = modelClient.universe(BASE_UNIVERSE).time(BASE_TIME);
-            modelClient.connect(o -> {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                modelClient.lookup(BASE_UNIVERSE, BASE_TIME, city.uuid(), kObject -> {
-                    System.out.println("lookup resolve: " + kObject);
-                    System.out.println(((City) kObject).getName());
-
+    private static void init_model(KCallback ready) {
+        final SmartcityModel model = new SmartcityModel(DataManagerBuilder.create().withContentDeliveryDriver(new WebSocketPeer("ws://localhost:" + PORT + "/" + ROOM)).build());
+        model.connect(o -> {
+            City city = model.createCity(BASE_UNIVERSE, BASE_TIME);
+            city.setName("MySmartCity");
+            District newDistrict_1 = model.createDistrict(BASE_UNIVERSE, BASE_TIME);
+            newDistrict_1.setName("District_1");
+            Contact contatDistrict1 = model.createContact(BASE_UNIVERSE, BASE_TIME);
+            contatDistrict1.setName("Mr district 1");
+            contatDistrict1.setEmail("contact@district1.smartcity");
+            newDistrict_1.addContact(contatDistrict1);
+            District newDistrict_2 = model.createDistrict(BASE_UNIVERSE, BASE_TIME);
+            newDistrict_2.setName("District_1");
+            city.addDistricts(newDistrict_1);
+            city.addDistricts(newDistrict_2);
+            Sensor sensor = model.createSensor(BASE_UNIVERSE, BASE_TIME);
+            sensor.setName("FakeTempSensor_0");
+            sensor.setValue(0.5);
+            newDistrict_2.addSensors(sensor);
+            model.universe(BASE_UNIVERSE).time(BASE_TIME).setRoot(city, throwable1 -> {
+                model.save(throwable2 -> {
+                    model.disconnect(ready);//call ready when everything as been set
                 });
             });
+        });
+    }
 
-            KListener listener = modelClient.createListener(BASE_UNIVERSE);
-            listener.listen(city);
-            listener.then(updatedObject -> {
-                System.out.println("updated: " + updatedObject);
+    private static void init_peer() {
+        final SmartcityModel model = new SmartcityModel(DataManagerBuilder.create().withContentDeliveryDriver(new WebSocketPeer("ws://localhost:" + PORT + "/" + ROOM)).build());
+        model.connect(o -> {
+            SmartcityView view = model.universe(BASE_UNIVERSE).time(BASE_TIME);
+            view.getRoot(rootObject -> {
+                System.out.println(rootObject.toJSON());
+                model.disconnect(o1 -> {
+                    counterPeers.countDown();
+                });
             });
-        }
+        });
     }
 
-    public static void main(String[] args) {
-        Thread s = new Thread(new Server());
-        s.start();
-
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        Thread c = new Thread(new Client());
-        c.start();
-
-    }
 
 }

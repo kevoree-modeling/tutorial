@@ -15,3 +15,5 @@ buildNumber.properties
 LOCK
 LOG
 LOG.old
+*/kmf/database
+MANIFEST-*
