@@ -9,7 +9,7 @@
     <name>Kevoree :: Modeling :: Tutorial :: Step2_Persistence</name>
 
     <properties>
-        <kmf.version>4.20.1</kmf.version>
+        <kmf.version>4.25.1-SNAPSHOT</kmf.version>
         <!-- Change this version to the last release -->
     </properties>
 
@@ -23,6 +23,12 @@
             <groupId>org.kevoree.modeling</groupId>
             <artifactId>org.kevoree.modeling.microframework.drivers.leveldb</artifactId>
             <version>${kmf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

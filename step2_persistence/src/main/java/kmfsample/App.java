@@ -1,5 +1,7 @@
 package kmfsample;
 
+import org.kevoree.modeling.KCallback;
+import org.kevoree.modeling.KObject;
 import org.kevoree.modeling.KUniverse;
 import org.kevoree.modeling.KView;
 import org.kevoree.modeling.cdn.KContentDeliveryDriver;
@@ -33,10 +35,8 @@ public class App {
 
         // first, connect the model
         model.connect(o -> {
-
             // build the model
             SmartcityView baseView = model.universe(BASE_UNIVERSE).time(BASE_TIME);
-
             City city = baseView.createCity();
             city.setName("MySmartCity");
             District newDistrict_1 = baseView.createDistrict();
@@ -44,7 +44,7 @@ public class App {
             Contact contatDistrict1 = baseView.createContact();
             contatDistrict1.setName("Mr district 1");
             contatDistrict1.setEmail("contact@district1.smartcity");
-            newDistrict_1.setContact(contatDistrict1);
+            newDistrict_1.addContact(contatDistrict1);
             District newDistrict_2 = model.createDistrict(BASE_UNIVERSE, BASE_TIME);
             newDistrict_2.setName("District_1");
             city.addDistricts(newDistrict_1);
@@ -53,23 +53,23 @@ public class App {
             sensor.setName("FakeTempSensor_0");
             sensor.setValue(0.5);
             newDistrict_2.addSensors(sensor);
-
             // set the root
             baseView.setRoot(city, throwable1 -> {
-
                 // save the model
                 model.save(t -> {
                     KUniverse universe = model.universe(BASE_UNIVERSE);
                     final KView lookupView = universe.time(BASE_TIME);
+                    model.manager().getRoot(lookupView.universe(), lookupView.now(), rootByAPI -> {
+                        System.out.println(rootByAPI);
 
-                    model.manager().getRoot(lookupView.universe(), lookupView.now(), kObject -> {
-                        System.out.println(kObject);
+                        lookupView.select("@root", rootByQuery -> {
+                            System.out.println( ((KObject)rootByQuery[0]).toJSON() );
+
+                            model.disconnect(null);
+
+                        });
+
                     });
-
-                    lookupView.select("@root", kObjects -> {
-                        System.out.println(kObjects);
-                    });
-
                 });
             });
         });

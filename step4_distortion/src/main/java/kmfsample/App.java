@@ -1,6 +1,7 @@
 package kmfsample;
 
 import org.kevoree.modeling.memory.manager.DataManagerBuilder;
+import org.kevoree.modeling.scheduler.impl.DirectScheduler;
 import smartcity.City;
 import smartcity.District;
 import smartcity.SmartcityModel;
@@ -13,7 +14,7 @@ public class App {
 
     public static void main(String[] args) {
 
-        final SmartcityModel model = new SmartcityModel(DataManagerBuilder.buildDefault());
+        final SmartcityModel model = new SmartcityModel(DataManagerBuilder.create().withScheduler(new DirectScheduler()).build());
 
         model.connect(o -> {
 

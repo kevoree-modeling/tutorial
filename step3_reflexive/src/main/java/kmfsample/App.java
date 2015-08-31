@@ -8,6 +8,7 @@ import org.kevoree.modeling.meta.KMetaClass;
 import org.kevoree.modeling.meta.KMetaModel;
 import org.kevoree.modeling.meta.KPrimitiveTypes;
 import org.kevoree.modeling.meta.impl.MetaModel;
+import org.kevoree.modeling.scheduler.impl.DirectScheduler;
 import org.kevoree.modeling.traversal.visitor.KVisitResult;
 
 public class App {
@@ -30,7 +31,7 @@ public class App {
         //create the reference districts from City to district with multiplicity 0..*
         metaClassCity.addReference("districts", metaClassDistrict, null, true);
 
-        KModel model = metaModel.createModel(DataManagerBuilder.buildDefault());
+        KModel model = metaModel.createModel(DataManagerBuilder.create().withScheduler(new DirectScheduler()).build());
         model.connect(o -> {
 
             //Create reflexively a model object using the metaClass name
@@ -62,7 +63,7 @@ public class App {
 
             //Visiting all attributes of an object
             city.visitAttributes((metaAttribute, value) -> {
-                System.out.println("City attribute " + metaAttribute.metaName() + ", type=" + metaAttribute.attributeType().name() + "=" + value);
+                System.out.println("City attribute " + metaAttribute.metaName() + ", type=" + metaAttribute.attributeTypeId() + "=" + value);
             });
 
             //Finally any object have a UUID and can be retrieve from it

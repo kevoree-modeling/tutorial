@@ -1,11 +1,11 @@
 class smartcity.City {
     att name: String
-    ref* districts: smartcity.District
+    rel districts: smartcity.District
 }
 
 class smartcity.District {
     att name: String
-    ref* sensors: smartcity.Sensor
+    rel sensors: smartcity.Sensor
 }
 
 class smartcity.Contact {

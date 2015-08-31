@@ -54,63 +54,70 @@ public class App {
                     @Override
                     public void on(String savedFullView) {
                         System.out.println("FullModel:" + savedFullView);
-                    }
-                });
 
-                //Now identified the Root
-                baseView.setRoot(city, new KCallback<Throwable>() {
-                    @Override
-                    public void on(Throwable throwable) {
-
-                        //Now traverse the Root
-                        baseView.getRoot(new KCallback<KObject>() {
+                        //Now identified the Root
+                        baseView.setRoot(city, new KCallback<Throwable>() {
                             @Override
-                            public void on(KObject resolvedRoot) {
-                                System.out.println("ResolvedRoot====> " + resolvedRoot);
+                            public void on(Throwable throwable) {
 
-                                //Example of navigating the model
-                                city.getDistricts(new KCallback<District[]>() {
+                                //Now traverse the Root
+                                baseView.getRoot(new KCallback<KObject>() {
                                     @Override
-                                    public void on(District[] districts) {
-                                        System.out.println("Navigated districts:");
-                                        for (District d : districts) {
-                                            System.out.println(d);
-                                        }
-                                        System.out.println("\n");
+                                    public void on(KObject resolvedRoot) {
+                                        System.out.println("ResolvedRoot====> " + resolvedRoot);
+
+                                        //Example of navigating the model
+                                        city.getDistricts(new KCallback<District[]>() {
+                                            @Override
+                                            public void on(District[] districts) {
+                                                System.out.println("Navigated districts:");
+                                                for (District d : districts) {
+                                                    System.out.println(d);
+                                                }
+                                                System.out.println("\n");
+                                            }
+                                        });
+
+                                        //Example of traversal
+                                        resolvedRoot.traversal().traverse(MetaCity.REL_DISTRICTS).then(new KCallback<KObject[]>() {
+                                            @Override
+                                            public void on(KObject[] kObjects) {
+
+                                                System.out.println("Districts extracted:" + kObjects.length);
+                                                System.out.println(kObjects[0]);
+                                                System.out.println(kObjects[1]);
+                                            }
+                                        });
+
+                                        //Example of deep traversal
+                                        resolvedRoot.traversal().traverse(MetaCity.REL_DISTRICTS).traverse(MetaDistrict.REL_SENSORS).then(new KCallback<KObject[]>() {
+                                            @Override
+                                            public void on(KObject[] kObjects) {
+
+                                                System.out.println("Sensor extracted:" + kObjects.length);
+                                                System.out.println(kObjects[0]);
+
+                                                model.disconnect(new KCallback() {
+                                                    @Override
+                                                    public void on(Object o) {
+
+                                                    }
+                                                });
+
+                                            }
+                                        });
+
+
                                     }
                                 });
-
-                                //Example of traversal
-                                resolvedRoot.traversal().traverse(MetaCity.REF_DISTRICTS).then(new KCallback<KObject[]>() {
-                                    @Override
-                                    public void on(KObject[] kObjects) {
-
-                                        System.out.println("Districts extracted:");
-                                        System.out.println(kObjects.length);
-                                        System.out.println(kObjects[0]);
-                                        System.out.println(kObjects[1]);
-                                    }
-                                });
-
-                                //Example of deep traversal
-                                resolvedRoot.traversal().traverse(MetaCity.REF_DISTRICTS).traverse(MetaDistrict.REF_SENSORS).then(new KCallback<KObject[]>() {
-                                    @Override
-                                    public void on(KObject[] kObjects) {
-
-                                        System.out.println("Sensor extracted:");
-                                        System.out.println(kObjects.length);
-                                        System.out.println(kObjects[0]);
-                                    }
-                                });
-
 
                             }
                         });
+                        //end of STEP_0
 
                     }
                 });
 
-                //end of STEP_0
 
             }
         });

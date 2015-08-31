@@ -1,8 +1,8 @@
 package kmfsample;
 
 import org.kevoree.modeling.KListener;
-import org.kevoree.modeling.drivers.websocket.WebSocketCDNClient;
-import org.kevoree.modeling.drivers.websocket.WebSocketGateway;
+import org.kevoree.modeling.drivers.websocket.WebSocketPeer;
+import org.kevoree.modeling.drivers.websocket.gateway.WebSocketGateway;
 import org.kevoree.modeling.memory.manager.DataManagerBuilder;
 import org.kevoree.modeling.memory.manager.internal.KInternalDataManager;
 import org.kevoree.modeling.scheduler.impl.ExecutorServiceScheduler;
@@ -23,12 +23,12 @@ public class App {
         @Override
         public void run() {
             KInternalDataManager dm = DataManagerBuilder.create().withScheduler(new ExecutorServiceScheduler()).build();
+            WebSocketGateway wsGateway = WebSocketGateway.expose(dm.cdn(),PORT);
+            wsGateway.start();
+
             final SmartcityModel model = new SmartcityModel(dm);
-
             model.connect(o -> {
-
                         SmartcityView baseView = model.universe(BASE_UNIVERSE).time(BASE_TIME);
-
                         city = baseView.createCity();
                         city.setName("MySmartCity");
                         District newDistrict_1 = baseView.createDistrict();
@@ -36,7 +36,7 @@ public class App {
                         Contact contatDistrict1 = baseView.createContact();
                         contatDistrict1.setName("Mr district 1");
                         contatDistrict1.setEmail("contact@district1.smartcity");
-                        newDistrict_1.setContact(contatDistrict1);
+                        newDistrict_1.addContact(contatDistrict1);
                         District newDistrict_2 = model.createDistrict(BASE_UNIVERSE, BASE_TIME);
                         newDistrict_2.setName("District_1");
                         city.addDistricts(newDistrict_1);
@@ -45,25 +45,18 @@ public class App {
                         sensor.setName("FakeTempSensor_0");
                         sensor.setValue(0.5);
                         newDistrict_2.addSensors(sensor);
-
                         baseView.setRoot(city, throwable1 -> {
-
                             model.save(throwable2 -> {
-                                WebSocketGateway wrapper = WebSocketGateway.exposeModel(model, PORT);
-                                wrapper.start();
-
                                 try {
                                     Thread.sleep(1000);
                                     city.setName("MySmartCity: " + System.currentTimeMillis());
                                     model.save(saveExc -> {
-
                                         try {
                                             Thread.sleep(2000);
                                             city.setName("MySmartCity: updated");
                                             model.save(saveExc2 -> {
 
                                             });
-
                                         } catch (InterruptedException e) {
                                             e.printStackTrace();
                                         }
@@ -83,7 +76,7 @@ public class App {
     static class Client implements Runnable {
         @Override
         public void run() {
-            WebSocketCDNClient client = new WebSocketCDNClient("ws://localhost:" + PORT);
+            WebSocketPeer client = new WebSocketPeer("ws://localhost:" + PORT);
             SmartcityModel modelClient = new SmartcityModel(DataManagerBuilder.create().withContentDeliveryDriver(client).build());
             SmartcityView view = modelClient.universe(BASE_UNIVERSE).time(BASE_TIME);
             modelClient.connect(o -> {

@@ -5,6 +5,7 @@ import org.kevoree.modeling.KModel;
 import org.kevoree.modeling.KObject;
 import org.kevoree.modeling.defer.KDefer;
 import org.kevoree.modeling.memory.manager.DataManagerBuilder;
+import org.kevoree.modeling.scheduler.impl.DirectScheduler;
 import smartcity.*;
 import smartcity.meta.MetaDistrict;
 import smartcity.meta.MetaSensorState;
@@ -21,7 +22,7 @@ public class App {
     public static void main(String[] args) {
 
         //In this tutorial step, we will mostly leverage the new closure API of Java 8
-        final SmartcityModel model = new SmartcityModel(DataManagerBuilder.buildDefault());
+        final SmartcityModel model = new SmartcityModel(DataManagerBuilder.create().withScheduler(new DirectScheduler()).build());
         model.connect(o -> {
             SmartcityView baseView = model.universe(BASE_UNIVERSE).time(BASE_TIME);
             City city = baseView.createCity();
@@ -31,7 +32,7 @@ public class App {
             Contact contactDistrict1 = baseView.createContact();
             contactDistrict1.setName("Mr district 1");
             contactDistrict1.setEmail("contact@district1.smartcity");
-            newDistrict_1.setContact(contactDistrict1);
+            newDistrict_1.addContact(contactDistrict1);
             District newDistrict_2 = model.createDistrict(BASE_UNIVERSE, BASE_TIME);
             newDistrict_2.setName("District_2");
             city.addDistricts(newDistrict_1);
@@ -46,7 +47,7 @@ public class App {
 
             //KInfer are classical object, so lets attach it a district
             SensorStateChecker checker = model.createSensorStateChecker(BASE_UNIVERSE, BASE_TIME);
-            newDistrict_2.setChecker(checker);
+            newDistrict_2.addChecker(checker);
 
 
             trainSensorChecker(model, tempsensor, humiditysensor, checker, o1 -> {
