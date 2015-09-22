@@ -18,6 +18,7 @@ class smartcity.Sensor {
     att name: String
     rel dvalues: smartcity.DiscreteValues with maxBound 1
     rel cvalues: smartcity.ContinuousValues with maxBound 1
+    rel profiler: smartgrid.ConsumptionProfiler with maxBound 1
 }
 
 class smartcity.DiscreteValues{
@@ -36,3 +37,14 @@ class smartcity.ContinuousValues{
 }
 
 
+class smartgrid.ConsumptionProfiler {
+    with inference "GaussianProfiler" with temporalResolution 2592000000
+
+    dependency consumption: smartcity.DiscreteValues
+
+    input timeValue "@consumption | =HOURS(TIME)"
+    input activeEnergyConsumedValue "@consumption | =dvalue1"
+
+// TODO should be optional
+    output probability: Double
+}

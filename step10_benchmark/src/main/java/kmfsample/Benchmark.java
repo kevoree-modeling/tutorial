@@ -4,6 +4,7 @@ import org.kevoree.modeling.memory.manager.DataManagerBuilder;
 import org.kevoree.modeling.scheduler.impl.DirectScheduler;
 import org.kevoree.modeling.scheduler.impl.TokenRingScheduler;
 import smartcity.*;
+import smartgrid.ConsumptionProfiler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,12 +23,12 @@ public class Benchmark {
     public static int numCities =10;
     public static int numDistrict =20;
     public static int numSensorPerDistrict=50;
-    public static int numValuesInsert=100000;
+    public static int numValuesInsert=300000;
 
 
     public static void main(String[] arg){
 
-        final SmartcityModel model = new SmartcityModel(DataManagerBuilder.create().withScheduler(new TokenRingScheduler()).build());
+        final SmartcityModel model = new SmartcityModel(DataManagerBuilder.create().withScheduler(new DirectScheduler()).build());
 
         model.connect(o -> {
             SmartcityView baseView = model.universe(BASE_UNIVERSE).time(BASE_TIME);
@@ -53,6 +54,8 @@ public class Benchmark {
                         ContinuousValues cv= baseView.createContinuousValues();
                         sensor.addCvalues(cv);
                         sensor.addDvalues(dv);
+                        ConsumptionProfiler cp = baseView.createConsumptionProfiler();
+                        sensor.addProfiler(cp);
                         district.addSensors(sensor);
                         sensorHashMap.put(s,sensor);
                     }
@@ -77,16 +80,22 @@ public class Benchmark {
                         cd[0].setDvalue2(0.2);
                         cd[0].setDvalue3(0.3);
                         cd[0].setDvalue4(0.4);
-                        time.incrementAndGet();
+                        sensor.getProfiler(profilers -> {
+                            profilers[0].train(cd[0], 0.0, trained -> {
+                            });
+                        });
+
+                        time.addAndGet(15 * 60000);
                         counter.countDown();
                         if (counter.getCount() == 0) {
                             endtime[0] = System.currentTimeMillis();
                             ex[0] = ((double) (endtime[0] - starttime[0])) / 1000;
                             System.out.println(numValuesInsert + " inserted in " + ex[0] + " seconds");
-                            model.disconnect(ogg->{
-
+                            model.disconnect(ogg -> {
                             });
                         }
+
+
                     });
                 });
             }
