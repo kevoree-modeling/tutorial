@@ -36,15 +36,16 @@ public class App {
                 for (int i = 0; i < counterPeers.getCount(); i++) {
                     init_peer();
                 }
+                try {
+                    counterPeers.await();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                wsGateway.stop();
+                levelDB_CDN.close(throwable1 -> {
+                });
             });
-            try {
-                counterPeers.await();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            wsGateway.stop();
-            levelDB_CDN.close(throwable1 -> {
-            });
+
         });
     }
 

@@ -11,14 +11,17 @@ Like for the persistence (see step 2 of this tutorial) the unit of distribution 
 Basically, like for resolving the right version of an object depending on time and universe, the KMF resolver also transparently resolves remote objects.
 This means that while navigating a model the necessary objects are automatically resolved via KMF, regardless if these objects are available on the local node or if they must be resolved from a remote one.
 A model in this sense is always 'virtual complete' meaning that it can be fully accessed from every node, regardless where the actual data are available.
-Data are only received on demand using a lazy loading strategy. 
-As for persistence, a content delivery driver is managing the remote access. 
+Data are only received on demand using a lazy loading strategy.
+As for persistence, a content delivery driver is managing the remote access.
 In this tutorial we will use a web socket content delivery driver for the distribution.
-First, a node needs to expose its model so that other nodes can access it: 
+First, a node needs to expose its model so that other nodes can access it:
 
 ```java
-WebSocketGateway wrapper = WebSocketGateway.exposeModel(model, PORT);
-wrapper.start();
+LevelDbContentDeliveryDriver levelDB_CDN = new LevelDbContentDeliveryDriver(databasePath);
+levelDB_CDN.connect(throwable -> {
+    WebSocketGateway wsGateway = WebSocketGateway.expose(levelDB_CDN, PORT);
+    wrapper.start();
+});
 ```
 
 Then, other nodes can use a content delivery driver to connect to the exposed model:
@@ -43,8 +46,8 @@ Reactive Models
 -------------
 In addition, to be able to access remote data, it is crucial for many applications to be informed about remote changes.
 This enables a reactive programming style: whenever an important change at a remote node happens, other nodes can react to these changes.
-This becomes possible due to the asynchronous core of KMF. 
-KMF allows to listen on a per-object granularity. 
+This becomes possible due to the asynchronous core of KMF.
+KMF allows to listen on a per-object granularity.
 This is shown in the following code snippet:
 
 ```java
