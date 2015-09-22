@@ -36,6 +36,7 @@ This step of the tutorial explains isomorphism and how KMF provides isomorphic m
 
 Step 8: Template Engine and Graph Visualisation
 
-Step 9: KInfer and Advanced Machine Learning Examples
+This step is to show how to model and use classification algorithms (Anomaly detection).
+[Step 9: KInfer and Advanced Machine Learning Examples](step9_inference)
 
 Step 10: BigData and OffHeap Models
