@@ -2,11 +2,10 @@ package kmfsample;
 
 import org.kevoree.modeling.memory.manager.DataManagerBuilder;
 import org.kevoree.modeling.scheduler.impl.DirectScheduler;
-import org.kevoree.modeling.scheduler.impl.TokenRingScheduler;
+import org.kevoree.modeling.scheduler.impl.LockFreeScheduler;
 import smartcity.*;
 import smartgrid.ConsumptionProfiler;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
@@ -20,71 +19,71 @@ public class Benchmark {
     public static final long BASE_UNIVERSE = 0;
     public static final long BASE_TIME = 0;
 
-    public static int numCities =10;
-    public static int numDistrict =20;
-    public static int numSensorPerDistrict=50;
-    public static int numValuesInsert=300000;
+    public static int numCities = 10;
+    public static int numDistrict = 20;
+    public static int numSensorPerDistrict = 50;
+    public static int numValuesInsert = 300000;
 
 
-    public static void main(String[] arg){
+    public static void main(String[] arg) {
 
         final SmartcityModel model = new SmartcityModel(DataManagerBuilder.create().withScheduler(new DirectScheduler()).build());
 
         model.connect(o -> {
             SmartcityView baseView = model.universe(BASE_UNIVERSE).time(BASE_TIME);
-            HashMap<String, Sensor> sensorHashMap = new HashMap<String, Sensor>(numCities*numDistrict*numSensorPerDistrict*2,0.8f);
+            HashMap<String, Sensor> sensorHashMap = new HashMap<String, Sensor>(numCities * numDistrict * numSensorPerDistrict * 2, 0.8f);
 
-            long[] starttime={System.currentTimeMillis()};
-            for(int i=0;i<numCities;i++){
+            long[] starttime = {System.currentTimeMillis()};
+            for (int i = 0; i < numCities; i++) {
                 City city = baseView.createCity();
-                city.setName("MySmartCity"+i);
-                for(int j=0;j<numDistrict;j++){
+                city.setName("MySmartCity" + i);
+                for (int j = 0; j < numDistrict; j++) {
                     District district = baseView.createDistrict();
-                    district.setName("District_"+i+"_"+j);
+                    district.setName("District_" + i + "_" + j);
                     Contact contactDistrict = baseView.createContact();
-                    contactDistrict.setName("Mr district_"+i+"_"+j);
-                    contactDistrict.setEmail("contact_"+i+"_"+j+"@district1.smartcity");
+                    contactDistrict.setName("Mr district_" + i + "_" + j);
+                    contactDistrict.setEmail("contact_" + i + "_" + j + "@district1.smartcity");
                     district.addContact(contactDistrict);
                     city.addDistricts(district);
-                    for(int k=0;k<numSensorPerDistrict;k++){
-                        Sensor sensor=baseView.createSensor();
-                        String s="Sensor_"+i+"_"+j+"_"+k;
+                    for (int k = 0; k < numSensorPerDistrict; k++) {
+                        Sensor sensor = baseView.createSensor();
+                        String s = "Sensor_" + i + "_" + j + "_" + k;
                         sensor.setName(s);
-                        DiscreteValues dv= baseView.createDiscreteValues();
-                        ContinuousValues cv= baseView.createContinuousValues();
+                        DiscreteValues dv = baseView.createDiscreteValues();
+                        ContinuousValues cv = baseView.createContinuousValues();
                         sensor.addCvalues(cv);
                         sensor.addDvalues(dv);
                         ConsumptionProfiler cp = baseView.createConsumptionProfiler();
                         sensor.addProfiler(cp);
                         district.addSensors(sensor);
-                        sensorHashMap.put(s,sensor);
+                        sensorHashMap.put(s, sensor);
                     }
                 }
             }
             final long[] endtime = {System.currentTimeMillis()};
             final double[] ex = {((double) (endtime[0] - starttime[0])) / 1000};
-            System.out.println("Model created in "+ ex[0] +" seconds for "+sensorHashMap.size() +" sensors");
-            Random rand=new Random();
+            System.out.println("Model created in " + ex[0] + " seconds for " + sensorHashMap.size() + " sensors");
+            Random rand = new Random();
             AtomicInteger time = new AtomicInteger(0);
-            starttime[0]=System.currentTimeMillis();
+            starttime[0] = System.currentTimeMillis();
             CountDownLatch counter = new CountDownLatch(numValuesInsert);
-            for(int v=0;v<numValuesInsert;v++){
-                int i=rand.nextInt(numCities);
-                int j=rand.nextInt(numDistrict);
-                int k=rand.nextInt(numSensorPerDistrict);
-                String s="Sensor_"+i+"_"+j+"_"+k;
-                Sensor sensor=sensorHashMap.get(s);
+            for (int v = 0; v < numValuesInsert; v++) {
+                int i = rand.nextInt(numCities);
+                int j = rand.nextInt(numDistrict);
+                int k = rand.nextInt(numSensorPerDistrict);
+                String s = "Sensor_" + i + "_" + j + "_" + k;
+                Sensor sensor = sensorHashMap.get(s);
                 sensor.jump(time.get(), ob -> {
                     sensor.getDvalues(cd -> {
                         cd[0].setDvalue1(0.1);
                         cd[0].setDvalue2(0.2);
                         cd[0].setDvalue3(0.3);
                         cd[0].setDvalue4(0.4);
+                        /*
                         sensor.getProfiler(profilers -> {
                             profilers[0].train(cd[0], 0.0, trained -> {
                             });
-                        });
-
+                        });*/
                         time.addAndGet(15 * 60000);
                         counter.countDown();
                         if (counter.getCount() == 0) {

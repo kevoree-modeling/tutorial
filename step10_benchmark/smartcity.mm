@@ -38,13 +38,10 @@ class smartcity.ContinuousValues{
 
 
 class smartgrid.ConsumptionProfiler {
-    with inference "GaussianProfiler" with temporalResolution 2592000000
-
+    with inference "EmptyInfer" with temporalResolution 2592000000
     dependency consumption: smartcity.DiscreteValues
-
-    input timeValue "@consumption | =HOURS(TIME)"
+    //input timeValue "@consumption | =HOURS(TIME)"
     input activeEnergyConsumedValue "@consumption | =dvalue1"
-
 // TODO should be optional
     output probability: Double
 }
