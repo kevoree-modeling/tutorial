@@ -1,13 +1,10 @@
 package kmfsample;
 
 import org.kevoree.modeling.KCallback;
-import org.kevoree.modeling.KListener;
 import org.kevoree.modeling.drivers.leveldb.LevelDbContentDeliveryDriver;
 import org.kevoree.modeling.drivers.websocket.WebSocketPeer;
 import org.kevoree.modeling.drivers.websocket.gateway.WebSocketGateway;
 import org.kevoree.modeling.memory.manager.DataManagerBuilder;
-import org.kevoree.modeling.memory.manager.internal.KInternalDataManager;
-import org.kevoree.modeling.scheduler.impl.ExecutorServiceScheduler;
 import smartcity.*;
 
 import java.io.IOException;

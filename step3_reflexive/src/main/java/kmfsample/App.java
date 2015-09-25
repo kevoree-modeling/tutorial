@@ -29,7 +29,7 @@ public class App {
         metaClassDistrict.addAttribute("nbcitizen", KPrimitiveTypes.LONG);
 
         //create the reference districts from City to district with multiplicity 0..*
-        metaClassCity.addReference("districts", metaClassDistrict, null, true);
+        metaClassCity.addRelation("districts", metaClassDistrict, null);
 
         KModel model = metaModel.createModel(DataManagerBuilder.create().withScheduler(new DirectScheduler()).build());
         model.connect(o -> {

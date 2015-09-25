@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.kevoree.modeling.tutorial</groupId>
+    <artifactId>org.kevoree.modeling.tutorial.root</artifactId>
+    <version>1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+
+    <modules>
+        <module>step0_helloworld</module>
+        <module>step1_async</module>
+        <module>step2_persistence</module>
+        <module>step3_reflexive</module>
+        <module>step4_distortion</module>
+        <module>step5_simple_ml</module>
+        <module>step6_distribution</module>
+        <module>step7_isomorphism</module>
+        <module>step9_inference</module>
+        <module>step10_benchmark</module>
+    </modules>
+
+    <properties>
+        <kmf.version>4.25.1-SNAPSHOT</kmf.version>
+    </properties>
+
+
+</project>
