@@ -8,7 +8,7 @@ Java 8 Closure API
 
 Java 8 introduced a new closure expression, which is very useful for KMFs asynchronous calls.
 This simplifies the previously necessary and a little bit heavy KCallback declaration:
- 
+
 ```java
  model.connect(o -> { });
 ```
@@ -50,7 +50,7 @@ public static void printObjects(Object[] objs) {
 }
 ```
 
-Each query is build using a principle similar to the UNIX PIPE command. 
+Each query is built using a principle similar to the UNIX PIPE command.
 Results from a previous step are injected as input of the next step.
 In our queries, steps are chained from **left** to **right** and separated by a **pipe**.
 Therefore, a FILTER_A which extracts data and then applies a filter FILTER_B would be written like this:
@@ -76,7 +76,7 @@ Here is a similar example with a filter on attribute:
 baseView.select("@root | districts[name=District_2] ", extractedObjects -> printObjects(extractedObjects));
 ```
 
-In addition, KMF queries accept wildcards to define names or even values in filters
+In addition, KMF queries accept wildcards for attributes/relations names and values in filters
 
 ```java
 baseView.select("@root | district*[na*=*trict_*]", extractedObjects -> printObjects(extractedObjects));
@@ -84,7 +84,7 @@ baseView.select("@root | district*[na*=*trict_*]", extractedObjects -> printObje
 All relationships in KMF are bidirectional (navigable in both directions).
 This means that they can be traversed in a reverse way by specifying the **<<** prefix or **>>** for the standard way.
 Hereafter, for instance it allows to navigate back to the city from its districts.
-This allows to filter at a lower level and then continue only with reachable top level objects. 
+This allows to filter at a lower level and then continue only with reachable top level objects.
 
 ```java
 baseView.select("@root | >>districts[*] | <<districts ", extractedObjects -> printObjects(extractedObjects));
@@ -113,7 +113,7 @@ In the following example the value (attribute of the sensor) is combined using c
 baseView.select("@root | districts[*] | sensors[] | =(3.5+value*8-14/7)%4 ", extractedObjects -> printObjects(extractedObjects));
 ```
 
-Considering the above explanations, the following 4 queries are equivalent: 
+Considering the above explanations, the following 4 queries are equivalent:
 ```java
 baseView.select("@root | districts", res -> printObjects(res));
 baseView.select("@root | districts[]", res -> printObjects(res));
