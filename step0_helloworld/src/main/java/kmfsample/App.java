@@ -34,7 +34,7 @@ public class App {
 
                 //We can as well create arbitrary object without the view
                 District newDistrict_2 = model.createDistrict(BASE_UNIVERSE, BASE_TIME);
-                newDistrict_2.setName("District_1");
+                newDistrict_2.setName("District_2");
 
                 city.addDistricts(newDistrict_1);
                 city.addDistricts(newDistrict_2);
@@ -44,7 +44,7 @@ public class App {
 
                 //Add a sensor
                 Sensor sensor = model.createSensor(BASE_UNIVERSE, BASE_TIME);
-                sensor.setName("FakeTempSensor_0");
+                sensor.setName("TempSensor_0");
                 sensor.setValue(0.5);
                 //Add the sensor to district 2
                 newDistrict_2.addSensors(sensor);

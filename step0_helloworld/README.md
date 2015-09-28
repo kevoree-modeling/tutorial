@@ -1,7 +1,7 @@
 Step 0: Hello World
 ==============================================
 
-This initial step of the KMF tutorial will help you to define an initial meta model, generate the associated code, and use the asynchronous API to create and traverse objects.
+This initial step of the KMF tutorial will help you defining an initial meta model, generate the associated code, and use the asynchronous API to create and traverse objects.
 
 Project Setup:
 -------------
@@ -33,8 +33,8 @@ The two important sections that should attract your attention in the pom.xml fil
     </build>
 ```
 
-This plugin defines that an input meta model file, in this case **smartcity.mm**, is used to generate the corresponding Java code for creating, processing, traversing, and manipulating data. 
-A simple 
+This plugin defines that an input meta model file, in this case **smartcity.mm**, is used to generate the corresponding Java code for creating, processing, traversing, and manipulating data.
+A simple
 
 ```sh
 mvn clean install
@@ -62,7 +62,8 @@ class smartcity.City {
 }
 class smartcity.District {
     att name: String
-    ref* sensors: smartcity.Sensor
+    rel sensors: smartcity.Sensor
+    rel contacts: smartcity.Contact with maxBound 2
 }
 class smartcity.Contact {
     att name: String
@@ -75,13 +76,14 @@ class smartcity.Sensor {
 ```
 
 Here we define a very simple meta model with a custom DSL, the **att** keyword defines the attributes of the class which can be only primitives types such as String, Long, Int, Bool, and Double.
-References between meta classes are declared through the **ref** and **ref*** keywords that define a to-one respectively too-many references.
+Relationships between meta classes are declared through the **rel** keyword that defines a to-many relation. To specify an upper bound for a relation, just use the ```with maxBound N``` annotation,
+N being the maximum number of object desired in a relation.
 
 
 Simple API Usage
 ------------------------
 
-The first thing to do in a Java program is the creation of a model instance, which can be done through the following code with default options (details of options will be covered in the next steps).
+The first thing to do in a Java program is the creation of a model instance, which can be done with the following code and default options (details of options will be covered in the next steps).
 
 ```java
 final SmartCityModel model = new SmartcityModel(DataManagerBuilder.buildDefault());
@@ -89,14 +91,15 @@ final SmartCityModel model = new SmartcityModel(DataManagerBuilder.buildDefault(
 
 Then, a model must be connected via the **connect** method and a callback must be used to continue once the model is connected.
 
-To manipulate a model we create a view. 
-A view is associate to a time point and a universe (details of time and universe will be covered later in this tutorial, here we use time 0 and universe 0)
+To manipulate a model we create a view.
+A view is associate to a universe and momentum in time (i.e.: time point). More details on time and universe will be covered later in this tutorial.
+Here, the universe 0 and  the time point 0 are used.
 
 ```java
 SmartCityView baseView = model.universe(BASE_UNIVERSE).time(BASE_TIME);
 ```
 
-From this view, one can now create objects, set values and references, and print the content of objects in JSON format.
+From this view, one can now create objects, set values and references, and, for instance, print the content of objects in JSON format.
 
 ```java
 //create one smartCity
@@ -109,11 +112,11 @@ District newDistrict_1 = baseView.createDistrict();
 newDistrict_1.setName("District_1");
 ```
 
-Objects can also be created outside of a view giving directly the time and universe (double values)
+Objects can also be created outside of a view giving directly the time and universe (long values)
 
 ```java
 District newDistrict_2 = model.createDistrict(BASE_UNIVERSE, BASE_TIME);
-newDistrict_2.setName("District_1");
+newDistrict_2.setName("District_2");
 ```
 
 To add an object in a relationship, one can use the **add<refName>** methods:
@@ -133,23 +136,24 @@ baseView.json().save(city, new KCallback<String>() {
     }
 });
 ```
-As we can see in the above code listing we first transform the content of the **baseView** object into a JSON **ModelFormat** (with the **json** method call).
-Next, with the **save** method call we save the content of the **ModelFormat** object into a string.
-Finally, we print the created string to the console. 
+
+As shown in the above code listing , the content of the **baseView** object is first transformed into a JSON **ModelFormat** (with the **json** method call).
+Next, the **save** method call translates the content of the **ModelFormat** object into a string.
+Finally, this string is printed to the console.
 
 Root Index
 ----------
 
-KMF offers several indexes to retrieve objects and then to navigate to siblings.
+KMF offers several indexes to retrieve objects and then navigate to siblings.
 The main index is called root.
-A root can be set from a **KView** object. 
+A root can be set from a **KView** object.
 In the following code snippet we set the **city** object as the root of the model:
 
 ```java
 baseView.setRoot(city, new KCallback<Throwable>() {
 ```
 
-Later, in order to retrieve the root for a point in time and universe, the **getRoot** method can be used: 
+Later, in order to retrieve the root for a given point in time and universe, the **getRoot** method can be used on a view:
 
 ```java
 baseView.getRoot(new KCallback<KObject>() {
@@ -157,16 +161,20 @@ baseView.getRoot(new KCallback<KObject>() {
             ...
 ```
 
-The root is resolved and given in the callback result as any KMF Object (KObject).
+The resolved root is given to the callback method just as any KMF Object (KObject).
 
 
 Simple Model Navigation
 ------------------------
-From any object the model (essentially the object graph) can be navigated using standard **get** methods to traverse attributes and relationships.
-As we will see in more detail in the next step of this tutorial, method calls in KMF are asynchronous. 
-The following code fragment shows how to traverse a relationship using an asynchronous **get**-relationship method. 
+From any object, the model (essentially the object graph) can be navigated using standard **get** methods to traverse attributes and relationships.
+As we will see in more detail in the next step of this tutorial, method calls in KMF are asynchronous.
+The following code fragment shows how to traverse a relationship using an asynchronous **get**-relationship method.
 ```java
-resolvedRoot.traversal()
+//Example of navigating the model
+city.getDistricts(new KCallback<District[]>() {
+    @Override
+    public void on(District[] districts) {
+      ...
 ```
 
 
@@ -182,28 +190,24 @@ resolvedRoot.traversal()
 
 From this traversal object, one can chain recursive navigation objects that will be executed at runtime.
 
-For example, one could imagine to traverse all objects of the relationship DISTRICT from an object CITY
+For example, one could imagine to traverse all objects of the relationship DISTRICT from an object CITY:
 
 ```java
-resolvedRoot.traversal().traverse(MetaCity.REF_DISTRICTS).then(new KCallback<KObject[]>() {
+resolvedRoot.traversal().traverse(MetaCity.REL_DISTRICTS).then(new KCallback<KObject[]>() {
     @Override
     public void on(KObject[] kObjects) {
 ```
 
 As results, a traversal will yield an array of objects that are the results of the traversal operation.
 In this case, all objects which are reachable from the city object through its district relationship.
-It is important to notice that all meta classes have a companion object that gives quick access to relationship definitions that can be used to configure the traversal, e.g. MetaCity.REF_DISTRICTS.
+It is important to notice that all meta classes have a companion object that gives quick access to relationship definitions that can be used to configure the traversal, e.g. MetaCity.REL_DISTRICTS.
 
 Finally, a traversal can consist of several steps, e.g. traverse first to the districts and from there to all sensors:
 
-```java 
-resolvedRoot.traversal().traverse(MetaCity.REF_DISTRICTS).traverse(MetaDistrict.REF_SENSORS).then(new KCallback<KObject[]>() {
+```java
+resolvedRoot.traversal().traverse(MetaCity.REL_DISTRICTS).traverse(MetaDistrict.REL_SENSORS).then(new KCallback<KObject[]>() {
     @Override
     public void on(KObject[] kObjects) {
 ```
 
 In this example, all sensors which are reachable from the districts which themselves are reachable from the city, will be yielded as result.
-
-
-
-

@@ -6,6 +6,7 @@ class smartcity.City {
 class smartcity.District {
     att name: String
     rel sensors: smartcity.Sensor
+    rel contacts: smartcity.Contact with maxBound 2
 }
 
 class smartcity.Contact {
