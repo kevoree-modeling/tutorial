@@ -1,6 +1,6 @@
 # The Kevoree Modeling Framework Tutorial
 
-In this tutorial we describe shortly the usage of KMF api to highlight main features of the framework. These tutorial steps can be used to pickup some code snippets and to have a concrete, apply and running set of example. For all step we deliver a maven project, therefore all step can be compile with a classical **mvn clean install** command on a terminal or your favorite IDE. We propose a plugin for the IntelliJ IDE that a great developing experience by leveraging advanced tools such as code completion and checker of our MetaModel definition file type **aka .mm files**.
+This tutorial shortly describes some usages of the KMF API that highlight the main features of this framework. These tutorial steps can be used to pickup some code snippets and to have a concrete, apply and running set of example. For all steps, we deliver a maven project, therefore all step can be compile with a classical **mvn clean install** command on a terminal or your favorite IDE. We propose a plugin for the IntelliJ IDE that a great developing experience by leveraging advanced tools such as code completion and checker of our MetaModel definition file type **aka .mm files**.
 
 [Step 0: Hello World ](step0_helloworld)
 
