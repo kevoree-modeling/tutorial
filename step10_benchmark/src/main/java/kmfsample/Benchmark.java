@@ -2,7 +2,6 @@ package kmfsample;
 
 import org.kevoree.modeling.memory.manager.DataManagerBuilder;
 import org.kevoree.modeling.scheduler.impl.DirectScheduler;
-import org.kevoree.modeling.scheduler.impl.LockFreeScheduler;
 import smartcity.*;
 import smartgrid.ConsumptionProfiler;
 

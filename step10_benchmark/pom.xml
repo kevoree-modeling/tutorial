@@ -9,7 +9,7 @@
         <relativePath>..</relativePath>
     </parent>
     <artifactId>step10_inference</artifactId>
-    <name>Kevoree :: Modeling :: Benchmark</name>
+    <name>Kevoree :: Modeling :: Tutorial :: Step10_Benchmark</name>
     <packaging>jar</packaging>
 
 

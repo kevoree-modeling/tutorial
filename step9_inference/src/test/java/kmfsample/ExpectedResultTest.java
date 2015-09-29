@@ -41,20 +41,29 @@ public class ExpectedResultTest {
         System.setOut(out);
         System.setErr(err);
 
+        String result = buffer.toString();
+        System.out.println(result);
 
-        Assert.assertEquals("test1\n" +
-                "test2\n" +
-                "test3\n" +
-                "test4\n" +
+
+        Assert.assertEquals("test2\n" +
                 "====End training === \n" +
-                "-20.0 , 0.5 =>SUSPICIOUS\n" +
-                "10.0 , 0.5 =>CORRECT\n" +
-                "100.0 , 0.5 =>SUSPICIOUS\n" +
-                "-20.0 , 0.0 =>SUSPICIOUS\n" +
-                "10.0 , 1.0 =>SUSPICIOUS\n" +
-                "100.0 , 0.0 =>SUSPICIOUS\n", buffer.toString());
+                "-20.0 , 0.0 => SUSPICIOUS\n" +
+                "-20.0 , 0.5 => SUSPICIOUS\n" +
+                "-20.0 , 0.6 => SUSPICIOUS\n" +
+                "-20.0 , 1.0 => SUSPICIOUS\n" +
+                "10.0 , 0.0 => SUSPICIOUS\n" +
+                "10.0 , 0.5 => CORRECT\n" +
+                "10.0 , 0.6 => CORRECT\n" +
+                "10.0 , 1.0 => SUSPICIOUS\n" +
+                "30.0 , 0.0 => SUSPICIOUS\n" +
+                "30.0 , 0.5 => CORRECT\n" +
+                "30.0 , 0.6 => CORRECT\n" +
+                "30.0 , 1.0 => SUSPICIOUS\n" +
+                "100.0 , 0.0 => SUSPICIOUS\n" +
+                "100.0 , 0.5 => SUSPICIOUS\n" +
+                "100.0 , 0.6 => SUSPICIOUS\n" +
+                "100.0 , 1.0 => SUSPICIOUS\n", result);
 
-        System.out.println(buffer.toString());
     }
 
 }
