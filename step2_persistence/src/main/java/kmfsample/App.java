@@ -11,6 +11,8 @@ import org.kevoree.modeling.memory.manager.internal.KInternalDataManager;
 import smartcity.*;
 
 import java.io.IOException;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 
 public class App {
 
@@ -18,16 +20,18 @@ public class App {
 
     public static final long BASE_TIME = 0;
 
-    public static void main(String[] args) {
+    // the relative path to the database (the LevelDB files will be created in this directory)
+    private static final String databasePath = "kmf/database";
 
-        // the relative path to the database (the LevelDB files will be created in this directory)
-        final String databasePath = "kmf/database";
+    public static void main(String[] args) {
+        clearDB();
+
 
         // setting the content delivery driver to LevelDB
         KInternalDataManager dm = null;
-        KContentDeliveryDriver cdn = null;
         try {
-            dm = DataManagerBuilder.create().withContentDeliveryDriver(new LevelDbContentDeliveryDriver(databasePath)).build();
+        KContentDeliveryDriver cdn = new LevelDbContentDeliveryDriver(databasePath);
+            dm = DataManagerBuilder.create().withContentDeliveryDriver(cdn).build();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -65,7 +69,9 @@ public class App {
                         lookupView.select("@root", rootByQuery -> {
                             System.out.println( ((KObject)rootByQuery[0]).toJSON() );
 
-                            model.disconnect(null);
+                            model.disconnect(err-> {
+                                clearDB();
+                            });
 
                         });
 
@@ -74,5 +80,28 @@ public class App {
             });
         });
 
+    }
+
+    private static void clearDB() {
+        Path directory = Paths.get(databasePath);
+        try {
+            if (Files.exists(directory)) {
+                Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
+                    @Override
+                    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                        Files.delete(file);
+                        return FileVisitResult.CONTINUE;
+                    }
+
+                    @Override
+                    public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                        Files.delete(dir);
+                        return FileVisitResult.CONTINUE;
+                    }
+                });
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

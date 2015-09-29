@@ -8,6 +8,8 @@ import org.kevoree.modeling.memory.manager.DataManagerBuilder;
 import smartcity.*;
 
 import java.io.IOException;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.concurrent.CountDownLatch;
 
 public class App {
@@ -18,11 +20,12 @@ public class App {
     public static final String ROOM = "myRoomID";
 
     public static CountDownLatch counterPeers = new CountDownLatch(3);
+    private static final String databasePath = "kmf/database";
 
     public static void main(String[] args) throws IOException, InterruptedException {
+        clearDB();
         System.setIn(null);
         // the relative path to the database (the LevelDB files will be created in this directory)
-        final String databasePath = "kmf/database";
         LevelDbContentDeliveryDriver levelDB_CDN = new LevelDbContentDeliveryDriver(databasePath);
         levelDB_CDN.connect(throwable -> {
             //We expose this CDN to other model peers leveraging the WebSocket gateway wrapper
@@ -40,6 +43,7 @@ public class App {
                 }
                 wsGateway.stop();
                 levelDB_CDN.close(throwable1 -> {
+                    clearDB();
                 });
             });
 
@@ -86,5 +90,27 @@ public class App {
         });
     }
 
+    private static void clearDB() {
+        Path directory = Paths.get(databasePath);
+        try {
+            if (Files.exists(directory)) {
+                Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
+                    @Override
+                    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                        Files.delete(file);
+                        return FileVisitResult.CONTINUE;
+                    }
+
+                    @Override
+                    public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                        Files.delete(dir);
+                        return FileVisitResult.CONTINUE;
+                    }
+                });
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }
