@@ -6,6 +6,8 @@ import org.kevoree.modeling.memory.manager.internal.KInternalDataManager;
 import smartcity.*;
 
 import java.io.IOException;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 
 public class App {
 
@@ -13,10 +15,12 @@ public class App {
     public static final long BASE_TIME = 0;
 
     private static final int VALUES = 1000;
+    private static final String databasePath = "kmf/database";
 
     public static void main(String[] args) {
 
-        final String databasePath = "kmf/database";
+        clearDB();
+
         KInternalDataManager dm = null;
         try {
             dm = DataManagerBuilder.create().withContentDeliveryDriver(new LevelDbContentDeliveryDriver(databasePath)).build();
@@ -26,6 +30,9 @@ public class App {
         final SmartcityModel model = new SmartcityModel(dm);
 
         model.connect(o -> {
+            if(o != null) {
+                ((Throwable)o).printStackTrace();
+            }
 
             SmartcityView baseView = model.universe(BASE_UNIVERSE).time(BASE_TIME);
 
@@ -58,23 +65,50 @@ public class App {
 
                             double value = (finalI * Math.random());
                             ((District) kObject).setElectricityConsumption(value);
-                            if (finalI == 5) {
+                            if (finalI == VALUES-1) {
                                 System.out.println(value);
                             }
 
-                            model.save(throwable3 -> {
-                                if (finalI == VALUES - 1) {
-                                    SmartcityView lookupView2 = model.universe(BASE_UNIVERSE).time(5);
+                            if (finalI == VALUES-1) {
+                                model.save(throwable3 -> {
+                                    SmartcityView lookupView2 = model.universe(BASE_UNIVERSE).time(VALUES-1);
                                     lookupView2.lookup(newDistrict_1.uuid(), kObject2 -> {
                                         System.out.println(((District) kObject2).getElectricityConsumption());
+                                        clearDB();
                                     });
-                                }
-                            });
+                                });
+                            }
                         });
                     }
                 });
             });
         });
     }
+
+
+
+    private static void clearDB() {
+        Path directory = Paths.get(databasePath);
+        try {
+            if (Files.exists(directory)) {
+                Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
+                    @Override
+                    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                        Files.delete(file);
+                        return FileVisitResult.CONTINUE;
+                    }
+
+                    @Override
+                    public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                        Files.delete(dir);
+                        return FileVisitResult.CONTINUE;
+                    }
+                });
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }
