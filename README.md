@@ -2,6 +2,10 @@
 
 This tutorial shortly describes some usages of the KMF API that highlight the main features of this framework. These tutorial steps can be used to pickup some code snippets and to have a concrete, apply and running set of example. For all steps, we deliver a maven project, therefore all step can be compile with a classical **mvn clean install** command on a terminal or your favorite IDE. We propose a plugin for the IntelliJ IDE that a great developing experience by leveraging advanced tools such as code completion and checker of our MetaModel definition file type **aka .mm files**.
 
+General Kevoree-Modeling channel 
+[![Gitter chat](https://badges.gitter.im/USER/REPO.png)](https://gitter.im/kevoree-modeling/chat "Gitter chat")
+
+
 [Step 0: Hello World ](step0_helloworld)
 
 This initial step of the KMF tutorial will help you to define an initial meta model, generate the associated code, and use the asynchronous API to create and traverse objects.
