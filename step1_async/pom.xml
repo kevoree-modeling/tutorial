@@ -2,16 +2,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>org.kevoree.modeling.tutorial</groupId>
-        <artifactId>org.kevoree.modeling.tutorial.root</artifactId>
-        <version>1-SNAPSHOT</version>
-        <relativePath>..</relativePath>
-    </parent>
+
     <artifactId>step1_async</artifactId>
+    <groupId>org.kevoree.modeling.tutorial</groupId>
+    <version>1-SNAPSHOT</version>
     <name>Kevoree :: Modeling :: Tutorial :: Step1_Async</name>
     <packaging>jar</packaging>
 
+    <properties>
+        <kmf.version>4.26.0</kmf.version>
+    </properties>
 
     <dependencies>
         <dependency>
