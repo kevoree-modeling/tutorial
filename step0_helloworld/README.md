@@ -58,7 +58,7 @@ The .mm file contains the following content:
 ```java
 class smartcity.City {
     att name : String
-    ref* districts: smartcity.District
+    rel districts: smartcity.District
 }
 class smartcity.District {
     att name: String
