@@ -1,13 +1,11 @@
 package kmfsample;
 
-import org.kevoree.modeling.KCallback;
 import org.kevoree.modeling.KObject;
-import org.kevoree.modeling.KUniverse;
-import org.kevoree.modeling.KView;
 import org.kevoree.modeling.cdn.KContentDeliveryDriver;
-import org.kevoree.modeling.drivers.leveldb.LevelDbContentDeliveryDriver;
 import org.kevoree.modeling.memory.manager.DataManagerBuilder;
 import org.kevoree.modeling.memory.manager.internal.KInternalDataManager;
+import org.kevoree.modeling.plugin.LevelDBPlugin;
+import org.kevoree.modeling.plugin.RocksDBPlugin;
 import smartcity.*;
 
 import java.io.IOException;
@@ -29,9 +27,13 @@ public class App {
         // setting the content delivery driver to LevelDB
         KInternalDataManager dm = null;
         try {
-            KContentDeliveryDriver cdn = new LevelDbContentDeliveryDriver(databasePath);
+            KContentDeliveryDriver cdn = new LevelDBPlugin(databasePath);
+
+            //Alternative storage using RocksDBPlugin
+            //KContentDeliveryDriver cdn = new RocksDBPlugin(databasePath);
+
             dm = DataManagerBuilder.create().withContentDeliveryDriver(cdn).build();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         final SmartcityModel model = new SmartcityModel(dm);

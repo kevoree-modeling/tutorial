@@ -11,7 +11,8 @@
 
     <properties>
         <kmf.version>4.27.0</kmf.version>
-        <plugin.leveldb.version>4.27.0-SNAPSHOT</plugin.leveldb.version>
+        <plugin.leveldb.version>4.27.0</plugin.leveldb.version>
+        <plugin.rocksdb.version>4.27.0</plugin.rocksdb.version>
     </properties>
 
     <dependencies>
@@ -26,6 +27,13 @@
             <artifactId>leveldb</artifactId>
             <version>${plugin.leveldb.version}</version>
         </dependency>
+        <!-- Alternative persistent plugin to use another backend -->
+        <dependency>
+            <groupId>org.kevoree.modeling.plugin</groupId>
+            <artifactId>rocksdb</artifactId>
+            <version>${plugin.rocksdb.version}</version>
+        </dependency>
+        <!-- Test dependency -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
