@@ -1,11 +1,14 @@
 package kmfsample;
 
 import org.kevoree.modeling.KCallback;
-import org.kevoree.modeling.drivers.leveldb.LevelDbContentDeliveryDriver;
-import org.kevoree.modeling.drivers.websocket.WebSocketPeer;
-import org.kevoree.modeling.drivers.websocket.gateway.WebSocketGateway;
+import org.kevoree.modeling.KObject;
+import org.kevoree.modeling.cdn.KContentDeliveryDriver;
 import org.kevoree.modeling.memory.manager.DataManagerBuilder;
+import org.kevoree.modeling.plugin.LevelDBPlugin;
+import org.kevoree.modeling.plugin.WebSocketClientPlugin;
+import org.kevoree.modeling.plugin.WebSocketGateway;
 import smartcity.*;
+import smartcity.meta.MetaCity;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -26,7 +29,7 @@ public class App {
         clearDB();
         System.setIn(null);
         // the relative path to the database (the LevelDB files will be created in this directory)
-        LevelDbContentDeliveryDriver levelDB_CDN = new LevelDbContentDeliveryDriver(databasePath);
+        KContentDeliveryDriver levelDB_CDN = new LevelDBPlugin(databasePath);
         levelDB_CDN.connect(throwable -> {
             //We expose this CDN to other model peers leveraging the WebSocket gateway wrapper
             WebSocketGateway wsGateway = WebSocketGateway.expose(levelDB_CDN, PORT);
@@ -51,7 +54,7 @@ public class App {
     }
 
     private static void init_model(KCallback ready) {
-        final SmartcityModel model = new SmartcityModel(DataManagerBuilder.create().withContentDeliveryDriver(new WebSocketPeer("ws://localhost:" + PORT + "/" + ROOM)).build());
+        final SmartcityModel model = new SmartcityModel(DataManagerBuilder.create().withContentDeliveryDriver(new WebSocketClientPlugin("ws://localhost:" + PORT + "/" + ROOM)).build());
         model.connect(o -> {
             City city = model.createCity(BASE_UNIVERSE, BASE_TIME);
             city.setName("MySmartCity");
@@ -69,23 +72,27 @@ public class App {
             sensor.setName("FakeTempSensor_0");
             sensor.setValue(0.5);
             newDistrict_2.addSensors(sensor);
-            model.universe(BASE_UNIVERSE).time(BASE_TIME).setRoot(city, throwable1 -> {
-                model.save(throwable2 -> {
-                    model.disconnect(ready);//call ready when everything as been set
-                });
+
+            model.findAll(MetaCity.getInstance(), BASE_UNIVERSE, BASE_TIME, new KCallback<KObject[]>() {
+                @Override
+                public void on(KObject[] kObjects) {
+                    System.out.println(kObjects[0].toJSON());
+                }
             });
+
+            model.save(throwable2 -> {
+                model.disconnect(ready);//call ready when everything as been set
+            });
+
         });
     }
 
     private static void init_peer() {
-        final SmartcityModel model = new SmartcityModel(DataManagerBuilder.create().withContentDeliveryDriver(new WebSocketPeer("ws://localhost:" + PORT + "/" + ROOM)).build());
+        final SmartcityModel model = new SmartcityModel(DataManagerBuilder.create().withContentDeliveryDriver(new WebSocketClientPlugin("ws://localhost:" + PORT + "/" + ROOM)).build());
         model.connect(o -> {
-            SmartcityView view = model.universe(BASE_UNIVERSE).time(BASE_TIME);
-            view.getRoot(rootObject -> {
-                System.out.println(rootObject.toJSON());
-                model.disconnect(o1 -> {
-                    counterPeers.countDown();
-                });
+
+            model.disconnect(o1 -> {
+                counterPeers.countDown();
             });
         });
     }

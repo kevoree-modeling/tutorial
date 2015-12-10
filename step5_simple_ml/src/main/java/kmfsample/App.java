@@ -1,8 +1,8 @@
 package kmfsample;
 
-import org.kevoree.modeling.drivers.leveldb.LevelDbContentDeliveryDriver;
 import org.kevoree.modeling.memory.manager.DataManagerBuilder;
 import org.kevoree.modeling.memory.manager.internal.KInternalDataManager;
+import org.kevoree.modeling.plugin.LevelDBPlugin;
 import smartcity.*;
 
 import java.io.IOException;
@@ -23,15 +23,15 @@ public class App {
 
         KInternalDataManager dm = null;
         try {
-            dm = DataManagerBuilder.create().withContentDeliveryDriver(new LevelDbContentDeliveryDriver(databasePath)).build();
+            dm = DataManagerBuilder.create().withContentDeliveryDriver(new LevelDBPlugin(databasePath)).build();
         } catch (IOException e) {
             e.printStackTrace();
         }
         final SmartcityModel model = new SmartcityModel(dm);
 
         model.connect(o -> {
-            if(o != null) {
-                ((Throwable)o).printStackTrace();
+            if (o != null) {
+                ((Throwable) o).printStackTrace();
             }
 
             SmartcityView baseView = model.universe(BASE_UNIVERSE).time(BASE_TIME);
@@ -53,38 +53,34 @@ public class App {
             sensor.setValue(0.5);
             newDistrict_2.addSensors(sensor);
 
-            baseView.setRoot(city, throwable1 -> {
+            model.save(throwable2 -> {
 
-                model.save(throwable2 -> {
+                for (int i = 0; i < VALUES; i++) {
+                    SmartcityView lookupView = model.universe(BASE_UNIVERSE).time(i);
+                    final int finalI = i;
 
-                    for (int i = 0; i < VALUES; i++) {
-                        SmartcityView lookupView = model.universe(BASE_UNIVERSE).time(i);
-                        final int finalI = i;
+                    lookupView.lookup(newDistrict_1.uuid(), kObject -> {
 
-                        lookupView.lookup(newDistrict_1.uuid(), kObject -> {
+                        double value = (finalI * Math.random());
+                        ((District) kObject).setElectricityConsumption(value);
+                        if (finalI == VALUES - 1) {
+                            System.out.println(value);
+                        }
 
-                            double value = (finalI * Math.random());
-                            ((District) kObject).setElectricityConsumption(value);
-                            if (finalI == VALUES-1) {
-                                System.out.println(value);
-                            }
-
-                            if (finalI == VALUES-1) {
-                                model.save(throwable3 -> {
-                                    SmartcityView lookupView2 = model.universe(BASE_UNIVERSE).time(VALUES-1);
-                                    lookupView2.lookup(newDistrict_1.uuid(), kObject2 -> {
-                                        System.out.println(((District) kObject2).getElectricityConsumption());
-                                        clearDB();
-                                    });
+                        if (finalI == VALUES - 1) {
+                            model.save(throwable3 -> {
+                                SmartcityView lookupView2 = model.universe(BASE_UNIVERSE).time(VALUES - 1);
+                                lookupView2.lookup(newDistrict_1.uuid(), kObject2 -> {
+                                    System.out.println(((District) kObject2).getElectricityConsumption());
+                                    clearDB();
                                 });
-                            }
-                        });
-                    }
-                });
+                            });
+                        }
+                    });
+                }
             });
         });
     }
-
 
 
     private static void clearDB() {
