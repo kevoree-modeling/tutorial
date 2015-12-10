@@ -10,15 +10,16 @@
     <packaging>jar</packaging>
 
     <properties>
-        <kmf.version>4.26.0</kmf.version>
+        <kmf.version>4.27.0</kmf.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.kevoree.modeling</groupId>
-            <artifactId>org.kevoree.modeling.microframework</artifactId>
+            <artifactId>microframework</artifactId>
             <version>${kmf.version}</version>
         </dependency>
+        <!-- Test dependency -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

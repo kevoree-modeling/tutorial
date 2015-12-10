@@ -25,7 +25,7 @@ public class App {
 
         metaClassCity.addAttribute("name", KPrimitiveTypes.STRING);
 
-        metaClassDistrict.addAttribute("name", KPrimitiveTypes.STRING);
+        metaClassDistrict.addAttribute("name", KPrimitiveTypes.STRING).setKey(true);
         metaClassDistrict.addAttribute("nbcitizen", KPrimitiveTypes.LONG);
 
         //create the reference districts from City to district with multiplicity 0..*

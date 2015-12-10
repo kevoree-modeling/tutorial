@@ -42,17 +42,17 @@ public class ExpectedResultTest {
         System.setErr(err);
 
         Assert.assertEquals("[\n" +
-                "{\"@class\":\"City\",\"@uuid\":1,\"name\":\"MySmartCity\",\"districts\":[2,3]},\n" +
+                "{\"@class\":\"City\",\"@uuid\":1,\"name\":\"MySmartCity\",\"districts\":[2,4]},\n" +
                 "{\"@class\":\"District\",\"@uuid\":2,\"name\":\"District_1\",\"nbcitizen\":\"10000\",\"op_districts\":[1]},\n" +
-                "{\"@class\":\"District\",\"@uuid\":3,\"name\":\"District_2\",\"nbcitizen\":\"50000\",\"op_districts\":[1]}\n" +
+                "{\"@class\":\"District\",\"@uuid\":4,\"name\":\"District_2\",\"nbcitizen\":\"50000\",\"op_districts\":[1]}\n" +
                 "]\n" +
                 "\n" +
                 "Visiting...{\"universe\":0,\"time\":0,\"uuid\":2,\"data\":{\"name\":\"District_1\",\"nbcitizen\":10000,\"op_districts\":[1]}}\n" +
-                "Visiting...{\"universe\":0,\"time\":0,\"uuid\":3,\"data\":{\"name\":\"District_2\",\"nbcitizen\":50000,\"op_districts\":[1]}}\n" +
+                "Visiting...{\"universe\":0,\"time\":0,\"uuid\":4,\"data\":{\"name\":\"District_2\",\"nbcitizen\":50000,\"op_districts\":[1]}}\n" +
                 "End of the visit\n" +
                 "City attribute name, type=-2=MySmartCity\n" +
                 "City uuid=1\n" +
-                "Resolved={\"universe\":0,\"time\":0,\"uuid\":1,\"data\":{\"name\":\"MySmartCity\",\"districts\":[2,3]}}\n", buffer.toString());
+                "Resolved={\"universe\":0,\"time\":0,\"uuid\":1,\"data\":{\"name\":\"MySmartCity\",\"districts\":[2,4]}}\n", buffer.toString());
 
         System.out.println(buffer.toString());
         
