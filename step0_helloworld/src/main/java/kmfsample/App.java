@@ -80,7 +80,6 @@ public class App {
                 @Override
                 public void on(String savedFullView) {
                     System.out.println("FullModel:" + savedFullView);
-                    //end of STEP_0
                 }
             });
 

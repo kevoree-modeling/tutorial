@@ -42,65 +42,68 @@ public class ExpectedResultTest {
         System.setErr(err);
 
 
-        Assert.assertEquals("eval: Expression: @root\n" +
+        Assert.assertEquals("eval: Expression: @smartcity.City\n" +
                 "ResultSize:1\n" +
-                "{\"universe\":0,\"time\":0,\"uuid\":1,\"data\":{\"name\":\"MySmartCity\",\"districts\":[2,4]}}\n" +
-                "eval: Expression: @root\n" +
+                "{\"universe\":0,\"time\":0,\"uuid\":1,\"data\":{\"name\":\"MySmartCity\",\"districts\":[3,5]}}\n" +
+                "eval: Expression: @smartcity.City[name=MySmartCity]\n" +
                 "ResultSize:1\n" +
-                "{\"universe\":0,\"time\":0,\"uuid\":1,\"data\":{\"name\":\"MySmartCity\",\"districts\":[2,4]}}\n" +
-                "eval: @root | districts[]ￂﾠ\n" +
-                "ResultSize:2\n" +
-                "{\"universe\":0,\"time\":0,\"uuid\":2,\"data\":{\"name\":\"District_1\",\"contact\":[3],\"op_City_districts\":[1]}}\n" +
-                "{\"universe\":0,\"time\":0,\"uuid\":4,\"data\":{\"name\":\"District_2\",\"sensors\":[5],\"op_City_districts\":[1]}}\n" +
-                "eval: @root | districts[name=District_2]ￂﾠ\n" +
+                "{\"universe\":0,\"time\":0,\"uuid\":1,\"data\":{\"name\":\"MySmartCity\",\"districts\":[3,5]}}\n" +
+                "eval: Expression: @smartcity.City\n" +
                 "ResultSize:1\n" +
-                "{\"universe\":0,\"time\":0,\"uuid\":4,\"data\":{\"name\":\"District_2\",\"sensors\":[5],\"op_City_districts\":[1]}}\n" +
-                "eval: @root | districts[name=District_*]\n" +
+                "{\"universe\":0,\"time\":0,\"uuid\":1,\"data\":{\"name\":\"MySmartCity\",\"districts\":[3,5]}}\n" +
+                "eval: @smartcity.City[name=MySmartCity] | districts[]ￂﾠ\n" +
                 "ResultSize:2\n" +
-                "{\"universe\":0,\"time\":0,\"uuid\":2,\"data\":{\"name\":\"District_1\",\"contact\":[3],\"op_City_districts\":[1]}}\n" +
-                "{\"universe\":0,\"time\":0,\"uuid\":4,\"data\":{\"name\":\"District_2\",\"sensors\":[5],\"op_City_districts\":[1]}}\n" +
-                "eval: @root | districts[name=*trict_*]\n" +
-                "ResultSize:2\n" +
-                "{\"universe\":0,\"time\":0,\"uuid\":2,\"data\":{\"name\":\"District_1\",\"contact\":[3],\"op_City_districts\":[1]}}\n" +
-                "{\"universe\":0,\"time\":0,\"uuid\":4,\"data\":{\"name\":\"District_2\",\"sensors\":[5],\"op_City_districts\":[1]}}\n" +
-                "eval: @root | districts[na*=*trict_*]\n" +
-                "ResultSize:2\n" +
-                "{\"universe\":0,\"time\":0,\"uuid\":2,\"data\":{\"name\":\"District_1\",\"contact\":[3],\"op_City_districts\":[1]}}\n" +
-                "{\"universe\":0,\"time\":0,\"uuid\":4,\"data\":{\"name\":\"District_2\",\"sensors\":[5],\"op_City_districts\":[1]}}\n" +
-                "eval: @root | district*[na*=*trict_*]\n" +
-                "ResultSize:2\n" +
-                "{\"universe\":0,\"time\":0,\"uuid\":2,\"data\":{\"name\":\"District_1\",\"contact\":[3],\"op_City_districts\":[1]}}\n" +
-                "{\"universe\":0,\"time\":0,\"uuid\":4,\"data\":{\"name\":\"District_2\",\"sensors\":[5],\"op_City_districts\":[1]}}\n" +
-                "@root | districts[*]ￂﾠ| sensors[]ￂﾠ\n" +
+                "{\"universe\":0,\"time\":0,\"uuid\":3,\"data\":{\"name\":\"District_1\",\"contact\":[4],\"op_City_districts\":[1]}}\n" +
+                "{\"universe\":0,\"time\":0,\"uuid\":5,\"data\":{\"name\":\"District_2\",\"sensors\":[6],\"op_City_districts\":[1]}}\n" +
+                "eval: @smartcity.City[name=MySmartCity] | districts[name=District_2]ￂﾠ\n" +
                 "ResultSize:1\n" +
-                "{\"universe\":0,\"time\":0,\"uuid\":5,\"data\":{\"name\":\"FakeTempSensor_0\",\"value\":0.5,\"op_District_sensors\":[4]}}\n" +
-                "@root | >>districts[*]ￂﾠ| <<districtsￂﾠ\n" +
+                "{\"universe\":0,\"time\":0,\"uuid\":5,\"data\":{\"name\":\"District_2\",\"sensors\":[6],\"op_City_districts\":[1]}}\n" +
+                "eval: @smartcity.City[name=MySmartCity] | districts[name=District_*]\n" +
+                "ResultSize:2\n" +
+                "{\"universe\":0,\"time\":0,\"uuid\":3,\"data\":{\"name\":\"District_1\",\"contact\":[4],\"op_City_districts\":[1]}}\n" +
+                "{\"universe\":0,\"time\":0,\"uuid\":5,\"data\":{\"name\":\"District_2\",\"sensors\":[6],\"op_City_districts\":[1]}}\n" +
+                "eval: @smartcity.City[name=MySmartCity] | districts[name=*trict_*]\n" +
+                "ResultSize:2\n" +
+                "{\"universe\":0,\"time\":0,\"uuid\":3,\"data\":{\"name\":\"District_1\",\"contact\":[4],\"op_City_districts\":[1]}}\n" +
+                "{\"universe\":0,\"time\":0,\"uuid\":5,\"data\":{\"name\":\"District_2\",\"sensors\":[6],\"op_City_districts\":[1]}}\n" +
+                "eval: @smartcity.City[name=MySmartCity] | districts[na*=*trict_*]\n" +
+                "ResultSize:2\n" +
+                "{\"universe\":0,\"time\":0,\"uuid\":3,\"data\":{\"name\":\"District_1\",\"contact\":[4],\"op_City_districts\":[1]}}\n" +
+                "{\"universe\":0,\"time\":0,\"uuid\":5,\"data\":{\"name\":\"District_2\",\"sensors\":[6],\"op_City_districts\":[1]}}\n" +
+                "eval: @smartcity.City[name=MySmartCity] | district*[na*=*trict_*]\n" +
+                "ResultSize:2\n" +
+                "{\"universe\":0,\"time\":0,\"uuid\":3,\"data\":{\"name\":\"District_1\",\"contact\":[4],\"op_City_districts\":[1]}}\n" +
+                "{\"universe\":0,\"time\":0,\"uuid\":5,\"data\":{\"name\":\"District_2\",\"sensors\":[6],\"op_City_districts\":[1]}}\n" +
+                "@smartcity.City[name=MySmartCity] | districts[*]ￂﾠ| sensors[]ￂﾠ\n" +
                 "ResultSize:1\n" +
-                "{\"universe\":0,\"time\":0,\"uuid\":1,\"data\":{\"name\":\"MySmartCity\",\"districts\":[2,4]}}\n" +
+                "{\"universe\":0,\"time\":0,\"uuid\":6,\"data\":{\"name\":\"FakeTempSensor_0\",\"value\":0.5,\"op_District_sensors\":[5]}}\n" +
+                "@smartcity.City[name=MySmartCity] | >>districts[*]ￂﾠ| <<districtsￂﾠ\n" +
+                "ResultSize:1\n" +
+                "{\"universe\":0,\"time\":0,\"uuid\":1,\"data\":{\"name\":\"MySmartCity\",\"districts\":[3,5]}}\n" +
                 "ResultSize:2\n" +
-                "{\"universe\":0,\"time\":0,\"uuid\":2,\"data\":{\"name\":\"District_1\",\"contact\":[3],\"op_City_districts\":[1]}}\n" +
-                "{\"universe\":0,\"time\":0,\"uuid\":4,\"data\":{\"name\":\"District_2\",\"sensors\":[5],\"op_City_districts\":[1]}}\n" +
+                "{\"universe\":0,\"time\":0,\"uuid\":3,\"data\":{\"name\":\"District_1\",\"contact\":[4],\"op_City_districts\":[1]}}\n" +
+                "{\"universe\":0,\"time\":0,\"uuid\":5,\"data\":{\"name\":\"District_2\",\"sensors\":[6],\"op_City_districts\":[1]}}\n" +
                 "ResultSize:2\n" +
-                "{\"universe\":0,\"time\":0,\"uuid\":2,\"data\":{\"name\":\"District_1\",\"contact\":[3],\"op_City_districts\":[1]}}\n" +
-                "{\"universe\":0,\"time\":0,\"uuid\":4,\"data\":{\"name\":\"District_2\",\"sensors\":[5],\"op_City_districts\":[1]}}\n" +
+                "{\"universe\":0,\"time\":0,\"uuid\":3,\"data\":{\"name\":\"District_1\",\"contact\":[4],\"op_City_districts\":[1]}}\n" +
+                "{\"universe\":0,\"time\":0,\"uuid\":5,\"data\":{\"name\":\"District_2\",\"sensors\":[6],\"op_City_districts\":[1]}}\n" +
                 "ResultSize:2\n" +
-                "{\"universe\":0,\"time\":0,\"uuid\":2,\"data\":{\"name\":\"District_1\",\"contact\":[3],\"op_City_districts\":[1]}}\n" +
-                "{\"universe\":0,\"time\":0,\"uuid\":4,\"data\":{\"name\":\"District_2\",\"sensors\":[5],\"op_City_districts\":[1]}}\n" +
+                "{\"universe\":0,\"time\":0,\"uuid\":3,\"data\":{\"name\":\"District_1\",\"contact\":[4],\"op_City_districts\":[1]}}\n" +
+                "{\"universe\":0,\"time\":0,\"uuid\":5,\"data\":{\"name\":\"District_2\",\"sensors\":[6],\"op_City_districts\":[1]}}\n" +
                 "ResultSize:2\n" +
-                "{\"universe\":0,\"time\":0,\"uuid\":2,\"data\":{\"name\":\"District_1\",\"contact\":[3],\"op_City_districts\":[1]}}\n" +
-                "{\"universe\":0,\"time\":0,\"uuid\":4,\"data\":{\"name\":\"District_2\",\"sensors\":[5],\"op_City_districts\":[1]}}\n" +
-                "@root | districts[*]ￂﾠ| sensors[] | =value \n" +
+                "{\"universe\":0,\"time\":0,\"uuid\":3,\"data\":{\"name\":\"District_1\",\"contact\":[4],\"op_City_districts\":[1]}}\n" +
+                "{\"universe\":0,\"time\":0,\"uuid\":5,\"data\":{\"name\":\"District_2\",\"sensors\":[6],\"op_City_districts\":[1]}}\n" +
+                "@smartcity.City[name=MySmartCity] | districts[*]ￂﾠ| sensors[] | =value \n" +
                 "ResultSize:1\n" +
                 "0.5\n" +
-                "@root | districts[*]ￂﾠ| sensors[] | =value \n" +
+                "@smartcity.City[name=MySmartCity] | districts[*]ￂﾠ| sensors[] | =value \n" +
                 "ResultSize:1\n" +
                 "1.5\n" +
                 "ResultSize:1\n" +
                 "1.5\n" +
                 "ResultSize:1\n" +
-                "{\"universe\":0,\"time\":0,\"uuid\":2,\"data\":{\"name\":\"District_1\",\"contact\":[3],\"op_City_districts\":[1]}}\n" +
+                "{\"universe\":0,\"time\":0,\"uuid\":3,\"data\":{\"name\":\"District_1\",\"contact\":[4],\"op_City_districts\":[1]}}\n" +
                 "ResultSize:1\n" +
-                "{\"universe\":0,\"time\":0,\"uuid\":4,\"data\":{\"name\":\"District_2\",\"sensors\":[5],\"op_City_districts\":[1]}}\n" +
+                "{\"universe\":0,\"time\":0,\"uuid\":5,\"data\":{\"name\":\"District_2\",\"sensors\":[6],\"op_City_districts\":[1]}}\n" +
                 "===KDeferResultSet===\n" +
                 "ResultSize:1\n" +
                 "0.5\n" +
