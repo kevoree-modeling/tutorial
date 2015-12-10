@@ -12,7 +12,7 @@
     <properties>
         <kmf.version>4.27.0</kmf.version>
         <plugin.leveldb.version>4.27.0</plugin.leveldb.version>
-        <plugin.websocket.version>4.27.0-SNAPSHOT</plugin.websocket.version>
+        <plugin.websocket.version>4.27.0</plugin.websocket.version>
     </properties>
 
     <dependencies>
