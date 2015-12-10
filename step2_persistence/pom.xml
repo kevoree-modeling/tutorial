@@ -10,19 +10,21 @@
     <packaging>jar</packaging>
 
     <properties>
-        <kmf.version>4.26.0</kmf.version>
+        <kmf.version>4.27.0</kmf.version>
+        <plugin.leveldb.version>4.27.0-SNAPSHOT</plugin.leveldb.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.kevoree.modeling</groupId>
-            <artifactId>org.kevoree.modeling.microframework</artifactId>
+            <artifactId>microframework</artifactId>
             <version>${kmf.version}</version>
         </dependency>
+        <!-- This dependency add the ability to leverage LevelDB backend to persist models -->
         <dependency>
-            <groupId>org.kevoree.modeling</groupId>
-            <artifactId>org.kevoree.modeling.microframework.drivers.leveldb</artifactId>
-            <version>${kmf.version}</version>
+            <groupId>org.kevoree.modeling.plugin</groupId>
+            <artifactId>leveldb</artifactId>
+            <version>${plugin.leveldb.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -36,7 +38,7 @@
         <plugins>
             <plugin>
                 <groupId>org.kevoree.modeling</groupId>
-                <artifactId>org.kevoree.modeling.generator.mavenplugin</artifactId>
+                <artifactId>generator.mavenplugin</artifactId>
                 <version>${kmf.version}</version>
                 <executions>
                     <execution>

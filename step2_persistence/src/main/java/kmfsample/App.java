@@ -26,11 +26,10 @@ public class App {
     public static void main(String[] args) {
         clearDB();
 
-
         // setting the content delivery driver to LevelDB
         KInternalDataManager dm = null;
         try {
-        KContentDeliveryDriver cdn = new LevelDbContentDeliveryDriver(databasePath);
+            KContentDeliveryDriver cdn = new LevelDbContentDeliveryDriver(databasePath);
             dm = DataManagerBuilder.create().withContentDeliveryDriver(cdn).build();
         } catch (IOException e) {
             e.printStackTrace();
@@ -40,6 +39,7 @@ public class App {
         // first, connect the model
         model.connect(o -> {
             // build the model
+            //The view is just a nice way to encapsulate BASE_UNIVERSE and BASE_TIME
             SmartcityView baseView = model.universe(BASE_UNIVERSE).time(BASE_TIME);
             City city = baseView.createCity();
             city.setName("MySmartCity");
@@ -57,26 +57,15 @@ public class App {
             sensor.setName("FakeTempSensor_0");
             sensor.setValue(0.5);
             newDistrict_2.addSensors(sensor);
-            // set the root
-            baseView.setRoot(city, throwable1 -> {
-                // save the model
-                model.save(t -> {
-                    KUniverse universe = model.universe(BASE_UNIVERSE);
-                    final KView lookupView = universe.time(BASE_TIME);
-                    model.manager().getRoot(lookupView.universe(), lookupView.now(), rootByAPI -> {
-                        System.out.println(rootByAPI);
-
-                        lookupView.select("@root", rootByQuery -> {
-                            System.out.println( ((KObject)rootByQuery[0]).toJSON() );
-
-                            model.disconnect(err-> {
-                                clearDB();
-                            });
-
-                        });
-
+            // save the model
+            model.save(t -> {
+                baseView.select("@smartcity.City", rootByQuery -> {
+                    System.out.println(((KObject) rootByQuery[0]).toJSON());
+                    model.disconnect(err -> {
+                        clearDB();
                     });
                 });
+
             });
         });
 
