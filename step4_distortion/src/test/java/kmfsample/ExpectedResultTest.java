@@ -43,12 +43,12 @@ public class ExpectedResultTest {
 
 
         Assert.assertEquals("null\n" +
-                "{\"universe\":0,\"time\":8,\"uuid\":3,\"data\":{\"name\":\"district_2_t7\"}}\n" +
-                "{\"universe\":0,\"time\":8,\"uuid\":1,\"data\":{\"name\":\"MySmartCity\",\"districts\":[2]}}\n" +
+                "{\"universe\":0,\"time\":8,\"uuid\":4,\"data\":{\"name\":\"district_2_t7\"}}\n" +
+                "{\"universe\":0,\"time\":8,\"uuid\":1,\"data\":{\"name\":\"MySmartCity\",\"districts\":[3]}}\n" +
                 "1\n" +
-                "{\"universe\":0,\"time\":13,\"uuid\":1,\"data\":{\"name\":\"MySmartCity\",\"districts\":[2,3]}}\n" +
+                "{\"universe\":0,\"time\":13,\"uuid\":1,\"data\":{\"name\":\"MySmartCity\",\"districts\":[3,4]}}\n" +
                 "2\n" +
-                " -> {\"universe\":0,\"time\":0,\"uuid\":1,\"data\":{\"name\":\"MySmartCity\",\"districts\":[2]}}\n", buffer.toString());
+                " -> {\"universe\":0,\"time\":0,\"uuid\":1,\"data\":{\"name\":\"MySmartCity\",\"districts\":[3]}}\n", buffer.toString());
 
         System.out.println(buffer.toString());
     }
