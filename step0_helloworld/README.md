@@ -14,7 +14,7 @@ The two important sections that should attract your attention in the pom.xml fil
         <plugins>
             <plugin>
                 <groupId>org.kevoree.modeling</groupId>
-                <artifactId>org.kevoree.modeling.generator.mavenplugin</artifactId>
+                <artifactId>generator.mavenplugin</artifactId>
                 <version>${kmf.version}</version>
                 <executions>
                     <execution>
@@ -47,7 +47,7 @@ In addition the pom.xml declares a dependency to the KMF framework:
     <dependencies>
         <dependency>
             <groupId>org.kevoree.modeling</groupId>
-            <artifactId>org.kevoree.modeling.microframework</artifactId>
+            <artifactId>microframework</artifactId>
             <version>${kmf.version}</version>
         </dependency>
     </dependencies>
@@ -57,7 +57,7 @@ The .mm file contains the following content:
 
 ```java
 class smartcity.City {
-    att name : String
+    att name : String with index
     rel districts: smartcity.District
 }
 class smartcity.District {
@@ -79,6 +79,8 @@ Here we define a very simple meta model with a custom DSL, the **att** keyword d
 Relationships between meta classes are declared through the **rel** keyword that defines a to-many relation. To specify an upper bound for a relation, just use the ```with maxBound N``` annotation,
 N being the maximum number of object desired in a relation.
 
+One important thing to notice is that city will be uniquely indexed through their name attribute. 
+This will allows later to **find** city by their name.
 
 Simple API Usage
 ------------------------
@@ -141,28 +143,20 @@ As shown in the above code listing , the content of the **baseView** object is f
 Next, the **save** method call translates the content of the **ModelFormat** object into a string.
 Finally, this string is printed to the console.
 
-Root Index
-----------
+Index usage
+-----------
 
-KMF offers several indexes to retrieve objects and then navigate to siblings.
-The main index is called root.
-A root can be set from a **KView** object.
-In the following code snippet we set the **city** object as the root of the model:
+KMF offers primary indexes that can be declared several attributes on a metaClass.
+In this example, the name of the SmartCity is decorated with index that trigger such fonctionality.
+Indexes are updated automatically one man set any attributes attached to an index.
 
-```java
-baseView.setRoot(city, new KCallback<Throwable>() {
-```
-
-Later, in order to retrieve the root for a given point in time and universe, the **getRoot** method can be used on a view:
+Later, in order to retrieve the city for a given point in time and universe, the **find** method can be used on a view:
 
 ```java
-baseView.getRoot(new KCallback<KObject>() {
-    public void on(KObject resolvedRoot) {
-            ...
+model.find(MetaCity.getInstance(), BASE_UNIVERSE, BASE_TIME, "name=MySmartCity", resolvedCity -> ...);
 ```
 
-The resolved root is given to the callback method just as any KMF Object (KObject).
-
+The resolved city is given to the callback method just as any KMF Object (KObject).
 
 Simple Model Navigation
 ------------------------
