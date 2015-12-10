@@ -13,6 +13,12 @@ This simplifies the previously necessary and a little bit heavy KCallback declar
  model.connect(o -> { });
 ```
 
+Similarly, a model can be disconnected this way:
+
+```java
+ model.disconnect(o -> { });
+`
+
 Inside the connection callback (now closure) we can instantiate meta model in a way similar to the previous step:
 
 ```java
