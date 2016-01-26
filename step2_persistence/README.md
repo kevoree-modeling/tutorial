@@ -27,9 +27,9 @@ In this tutorial we will use Google's LevelDB since it is easy to embed in appli
 First of all, we have to add the driver for LevelDB as a maven dependency:
 ```java
 <dependency>
-    <groupId>org.kevoree.modeling</groupId>
-    <artifactId>org.kevoree.modeling.microframework.drivers.leveldb</artifactId>
-    <version>${kmf.version}</version>
+    <groupId>org.kevoree.modeling.plugin</groupId>
+    <artifactId>leveldb</artifactId>
+    <version>REPLACE_BY_LAST_VERSION</version>
 </dependency>
  ```
 The following code shows how to configure KMF to use LevelDB as its persistent storage.
