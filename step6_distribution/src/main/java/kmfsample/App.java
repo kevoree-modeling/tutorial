@@ -73,15 +73,15 @@ public class App {
             sensor.setValue(0.5);
             newDistrict_2.addSensors(sensor);
 
-            model.findAll(MetaCity.getInstance(), BASE_UNIVERSE, BASE_TIME, new KCallback<KObject[]>() {
-                @Override
-                public void on(KObject[] kObjects) {
-                    System.out.println(kObjects[0].toJSON());
-                }
-            });
-
             model.save(throwable2 -> {
-                model.disconnect(ready);//call ready when everything as been set
+                model.findAll(MetaCity.getInstance(), BASE_UNIVERSE, BASE_TIME, new KCallback<KObject[]>() {
+                    @Override
+                    public void on(KObject[] kObjects) {
+                        System.out.println(kObjects[0].toJSON());
+                        model.disconnect(ready);//call ready when everything as been set
+                    }
+                });
+
             });
 
         });
