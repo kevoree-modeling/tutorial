@@ -23,6 +23,7 @@ public class ExpectedResultTest {
                 buffer.append((char) b);
             }
         }));
+        System.setErr(null);
         /*
         System.setErr(new PrintStream(new OutputStream() {
             @Override
@@ -34,18 +35,18 @@ public class ExpectedResultTest {
         App.main(null);
 
         //Wait all callback end
+
         try {
-            Thread.sleep(5000);
+            Thread.sleep(300);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
         System.setOut(out);
-       // System.setErr(err);
+        System.setErr(err);
 
-        Assert.assertEquals("{\"universe\":0,\"time\":0,\"uuid\":1,\"data\":{\"name\":\"MySmartCity\",\"districts\":[2,4]}}\n" +
-                "{\"universe\":0,\"time\":0,\"uuid\":1,\"data\":{\"name\":\"MySmartCity\",\"districts\":[2,4]}}\n" +
-                "{\"universe\":0,\"time\":0,\"uuid\":1,\"data\":{\"name\":\"MySmartCity\",\"districts\":[2,4]}}\n", buffer.toString());
+        System.out.println(buffer.toString());
+
+        Assert.assertEquals("{\"universe\":0,\"time\":0,\"uuid\":1,\"data\":{\"name\":\"MySmartCity\",\"districts\":[2,4]}}\n", buffer.toString());
 
     }
 
