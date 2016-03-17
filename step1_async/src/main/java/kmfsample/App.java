@@ -60,12 +60,12 @@ public class App {
             baseView.select("@smartcity.City", App::printObjects);
 
             //Pipe the root traversal with the traverse of all district
-            System.out.println("eval: @smartcity.City[name=MySmartCity] | districts[] ");
-            baseView.select("@smartcity.City[name=MySmartCity] | districts[] ", extractedObjects -> printObjects(extractedObjects));
+            System.out.println("eval: @smartcity.City[name=MySmartCity] | districts[] ");
+            baseView.select("@smartcity.City[name=MySmartCity] | districts[] ", extractedObjects -> printObjects(extractedObjects));
 
             //Filter only the district 2
-            System.out.println("eval: @smartcity.City[name=MySmartCity] | districts[name=District_2] ");
-            baseView.select("@smartcity.City[name=MySmartCity] | districts[name=District_2] ", extractedObjects -> printObjects(extractedObjects));
+            System.out.println("eval: @smartcity.City[name=MySmartCity] | districts[name=District_2] ");
+            baseView.select("@smartcity.City[name=MySmartCity] | districts[name=District_2] ", extractedObjects -> printObjects(extractedObjects));
 
             //Wildcard can replace any chars
             System.out.println("eval: @smartcity.City[name=MySmartCity] | districts[name=District_*]");
@@ -84,12 +84,12 @@ public class App {
             baseView.select("@smartcity.City[name=MySmartCity] | district*[na*=*trict_*]", extractedObjects -> printObjects(extractedObjects));
 
             //Pipe the root traversal with the traverse of all district then all reachable sensors
-            System.out.println("@smartcity.City[name=MySmartCity] | districts[*] | sensors[] ");
-            baseView.select("@smartcity.City[name=MySmartCity] | districts[*] | sensors[] ", extractedObjects -> printObjects(extractedObjects));
+            System.out.println("@smartcity.City[name=MySmartCity] | districts[*] | sensors[] ");
+            baseView.select("@smartcity.City[name=MySmartCity] | districts[*] | sensors[] ", extractedObjects -> printObjects(extractedObjects));
 
             //Using the << and >> keyword, all relationships became navigable in both way, Thus even without opposite sensors can navigate to the districts
-            System.out.println("@smartcity.City[name=MySmartCity] | >>districts[*] | <<districts ");
-            baseView.select("@smartcity.City[name=MySmartCity] | >>districts[*] | <<districts ", extractedObjects -> printObjects(extractedObjects));
+            System.out.println("@smartcity.City[name=MySmartCity] | >>districts[*] | <<districts ");
+            baseView.select("@smartcity.City[name=MySmartCity] | >>districts[*] | <<districts ", extractedObjects -> printObjects(extractedObjects));
 
             //These 4 queries are equivalent
             baseView.select("@smartcity.City[name=MySmartCity] | districts", res -> printObjects(res));
@@ -98,12 +98,12 @@ public class App {
             baseView.select("@smartcity.City[name=MySmartCity] | >>districts", res -> printObjects(res));
 
             //The = keyword introduce the math
-            System.out.println("@smartcity.City[name=MySmartCity] | districts[*] | sensors[] | =value ");
-            baseView.select("@smartcity.City[name=MySmartCity] | districts[*] | sensors[] | =value ", extractedObjects -> printObjects(extractedObjects));
+            System.out.println("@smartcity.City[name=MySmartCity] | districts[*] | sensors[] | =value ");
+            baseView.select("@smartcity.City[name=MySmartCity] | districts[*] | sensors[] | =value ", extractedObjects -> printObjects(extractedObjects));
 
             //The Math expression can be arbitrary complex
-            System.out.println("@smartcity.City[name=MySmartCity] | districts[*] | sensors[] | =value ");
-            baseView.select("@smartcity.City[name=MySmartCity] | districts[*] | sensors[] | =(3.5+value*8-14/7)%4 ", extractedObjects -> printObjects(extractedObjects));
+            System.out.println("@smartcity.City[name=MySmartCity] | districts[*] | sensors[] | =value ");
+            baseView.select("@smartcity.City[name=MySmartCity] | districts[*] | sensors[] | =(3.5+value*8-14/7)%4 ", extractedObjects -> printObjects(extractedObjects));
 
             //The same traversal can be expressed in a language integrated way
             city.traversal()
@@ -127,8 +127,8 @@ public class App {
             //Finally a KDefer object allows to aggregate many asynchronous results
             KDefer defer = model.defer();
             //We ask the KDefer to create callback to collect some results
-            baseView.select("@smartcity.City[name=MySmartCity] | districts[*] | sensors[] | =value ", defer.waitResult());
-            baseView.select("@smartcity.City[name=MySmartCity] | districts[*] | sensors[] | =(3.5+value*8-14/7)%4 ", defer.waitResult());
+            baseView.select("@smartcity.City[name=MySmartCity] | districts[*] | sensors[] | =value ", defer.waitResult());
+            baseView.select("@smartcity.City[name=MySmartCity] | districts[*] | sensors[] | =(3.5+value*8-14/7)%4 ", defer.waitResult());
             defer.then(resultSets -> {
                 //Now result are complete, the size of this array should be 2, (equivalent to each callback)
                 System.out.println("===KDeferResultSet===");

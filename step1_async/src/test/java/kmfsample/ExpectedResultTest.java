@@ -51,11 +51,11 @@ public class ExpectedResultTest {
                 "eval: Expression: @smartcity.City\n" +
                 "ResultSize:1\n" +
                 "{\"universe\":0,\"time\":0,\"uuid\":1,\"data\":{\"name\":\"MySmartCity\",\"districts\":[3,5]}}\n" +
-                "eval: @smartcity.City[name=MySmartCity] | districts[]ￂﾠ\n" +
+                "eval: @smartcity.City[name=MySmartCity] | districts[] \n" +
                 "ResultSize:2\n" +
                 "{\"universe\":0,\"time\":0,\"uuid\":3,\"data\":{\"name\":\"District_1\",\"contact\":[4],\"op_City_districts\":[1]}}\n" +
                 "{\"universe\":0,\"time\":0,\"uuid\":5,\"data\":{\"name\":\"District_2\",\"sensors\":[6],\"op_City_districts\":[1]}}\n" +
-                "eval: @smartcity.City[name=MySmartCity] | districts[name=District_2]ￂﾠ\n" +
+                "eval: @smartcity.City[name=MySmartCity] | districts[name=District_2] \n" +
                 "ResultSize:1\n" +
                 "{\"universe\":0,\"time\":0,\"uuid\":5,\"data\":{\"name\":\"District_2\",\"sensors\":[6],\"op_City_districts\":[1]}}\n" +
                 "eval: @smartcity.City[name=MySmartCity] | districts[name=District_*]\n" +
@@ -74,10 +74,10 @@ public class ExpectedResultTest {
                 "ResultSize:2\n" +
                 "{\"universe\":0,\"time\":0,\"uuid\":3,\"data\":{\"name\":\"District_1\",\"contact\":[4],\"op_City_districts\":[1]}}\n" +
                 "{\"universe\":0,\"time\":0,\"uuid\":5,\"data\":{\"name\":\"District_2\",\"sensors\":[6],\"op_City_districts\":[1]}}\n" +
-                "@smartcity.City[name=MySmartCity] | districts[*]ￂﾠ| sensors[]ￂﾠ\n" +
+                "@smartcity.City[name=MySmartCity] | districts[*] | sensors[] \n" +
                 "ResultSize:1\n" +
                 "{\"universe\":0,\"time\":0,\"uuid\":6,\"data\":{\"name\":\"FakeTempSensor_0\",\"value\":0.5,\"op_District_sensors\":[5]}}\n" +
-                "@smartcity.City[name=MySmartCity] | >>districts[*]ￂﾠ| <<districtsￂﾠ\n" +
+                "@smartcity.City[name=MySmartCity] | >>districts[*] | <<districts \n" +
                 "ResultSize:1\n" +
                 "{\"universe\":0,\"time\":0,\"uuid\":1,\"data\":{\"name\":\"MySmartCity\",\"districts\":[3,5]}}\n" +
                 "ResultSize:2\n" +
@@ -92,10 +92,10 @@ public class ExpectedResultTest {
                 "ResultSize:2\n" +
                 "{\"universe\":0,\"time\":0,\"uuid\":3,\"data\":{\"name\":\"District_1\",\"contact\":[4],\"op_City_districts\":[1]}}\n" +
                 "{\"universe\":0,\"time\":0,\"uuid\":5,\"data\":{\"name\":\"District_2\",\"sensors\":[6],\"op_City_districts\":[1]}}\n" +
-                "@smartcity.City[name=MySmartCity] | districts[*]ￂﾠ| sensors[] | =value \n" +
+                "@smartcity.City[name=MySmartCity] | districts[*] | sensors[] | =value \n" +
                 "ResultSize:1\n" +
                 "0.5\n" +
-                "@smartcity.City[name=MySmartCity] | districts[*]ￂﾠ| sensors[] | =value \n" +
+                "@smartcity.City[name=MySmartCity] | districts[*] | sensors[] | =value \n" +
                 "ResultSize:1\n" +
                 "1.5\n" +
                 "ResultSize:1\n" +
@@ -110,7 +110,7 @@ public class ExpectedResultTest {
                 "ResultSize:1\n" +
                 "1.5\n", buffer.toString());
 
-        System.out.println(buffer.toString());
+        //System.out.println(buffer.toString());
     }
 
 }
