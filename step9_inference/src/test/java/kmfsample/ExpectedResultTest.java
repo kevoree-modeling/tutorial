@@ -62,7 +62,7 @@ public class ExpectedResultTest {
                 "100.0 , 0.0 => SUSPICIOUS\n" +
                 "100.0 , 0.5 => SUSPICIOUS\n" +
                 "100.0 , 0.6 => SUSPICIOUS\n" +
-                "100.0 , 1.0 => SUSPICIOUS\n", result);
+                "100.0 , 1.0 => SUSPICIOUS\n", result.replaceAll("\r\n","\n"));
 
     }
 

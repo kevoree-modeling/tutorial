@@ -108,7 +108,7 @@ public class ExpectedResultTest {
                 "ResultSize:1\n" +
                 "0.5\n" +
                 "ResultSize:1\n" +
-                "1.5\n", buffer.toString());
+                "1.5\n", buffer.toString().replaceAll("\r\n","\n"));
 
         //System.out.println(buffer.toString());
     }

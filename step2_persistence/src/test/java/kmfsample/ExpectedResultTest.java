@@ -41,7 +41,7 @@ public class ExpectedResultTest {
         System.setOut(out);
         System.setErr(err);
 
-        Assert.assertEquals("{\"universe\":0,\"time\":0,\"uuid\":1,\"data\":{\"name\":\"MySmartCity\",\"districts\":[2,4]}}\n", buffer.toString());
+        Assert.assertEquals("{\"universe\":0,\"time\":0,\"uuid\":1,\"data\":{\"name\":\"MySmartCity\",\"districts\":[2,4]}}\n", buffer.toString().replaceAll("\r\n","\n"));
 
         System.out.println(buffer.toString());
         

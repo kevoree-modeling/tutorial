@@ -52,7 +52,7 @@ public class ExpectedResultTest {
                 "End of the visit\n" +
                 "City attribute name, type=-2=MySmartCity\n" +
                 "City uuid=1\n" +
-                "Resolved={\"universe\":0,\"time\":0,\"uuid\":1,\"data\":{\"name\":\"MySmartCity\",\"districts\":[2,4]}}\n", buffer.toString());
+                "Resolved={\"universe\":0,\"time\":0,\"uuid\":1,\"data\":{\"name\":\"MySmartCity\",\"districts\":[2,4]}}\n", buffer.toString().replaceAll("\r\n","\n"));
 
         System.out.println(buffer.toString());
         

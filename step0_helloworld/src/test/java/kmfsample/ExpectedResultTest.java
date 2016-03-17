@@ -41,7 +41,6 @@ public class ExpectedResultTest {
         System.setOut(out);
         System.setErr(err);
 
-
         Assert.assertEquals("NewCreatedCity==>{\"universe\":0,\"time\":0,\"uuid\":1,\"data\":{\"name\":\"MySmartCity\"}}\n" +
                 "ModifiedCity==>{\"universe\":0,\"time\":0,\"uuid\":1,\"data\":{\"name\":\"MySmartCity\",\"districts\":[2,3]}}\n" +
                 "Navigated districts:\n" +
@@ -59,7 +58,7 @@ public class ExpectedResultTest {
                 "{\"@class\":\"smartcity.Sensor\",\"@uuid\":4,\"name\":\"TempSensor_0\",\"value\":\"0.5\",\"op_District_sensors\":[3]}\n" +
                 "]\n" +
                 "\n" +
-                "CityByFindMethod==>{\"universe\":0,\"time\":0,\"uuid\":1,\"data\":{\"name\":\"MySmartCity\",\"districts\":[2,3]}}\n", buffer.toString());
+                "CityByFindMethod==>{\"universe\":0,\"time\":0,\"uuid\":1,\"data\":{\"name\":\"MySmartCity\",\"districts\":[2,3]}}\n", buffer.toString().replaceAll("\r\n","\n"));
 
         System.out.println(buffer.toString());
     }

@@ -48,7 +48,7 @@ public class ExpectedResultTest {
                 "1\n" +
                 "{\"universe\":0,\"time\":13,\"uuid\":1,\"data\":{\"name\":\"MySmartCity\",\"districts\":[3,4]}}\n" +
                 "2\n" +
-                " -> {\"universe\":0,\"time\":0,\"uuid\":1,\"data\":{\"name\":\"MySmartCity\",\"districts\":[3]}}\n", buffer.toString());
+                " -> {\"universe\":0,\"time\":0,\"uuid\":1,\"data\":{\"name\":\"MySmartCity\",\"districts\":[3]}}\n", buffer.toString().replaceAll("\r\n","\n"));
 
         System.out.println(buffer.toString());
     }
