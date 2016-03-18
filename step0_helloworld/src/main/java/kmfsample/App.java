@@ -28,7 +28,7 @@ public class App {
 
             //The name of the city is also the index, so now we can retrieve this object
             model.find(MetaCity.getInstance(), BASE_UNIVERSE, BASE_TIME, "name=MySmartCity", myCity -> {
-                System.out.println("CityByFindMethod==>" + city.toJSON());
+                System.out.println("CityByFindMethod==>" + myCity.toJSON());
             });
 
             //Add two empty district
